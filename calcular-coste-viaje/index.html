@@ -1,7 +1,139 @@
-<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Calculadora de coste de viaje en coche</title><meta name="description" content="Calcula el coste de un viaje en coche con combustible, peajes, ida y vuelta y reparto entre pasajeros."><meta name="robots" content="index,follow"><link rel="canonical" href="https://danielcarmona-space.github.io/calculadora-combustible/calcular-coste-viaje/"><meta property="og:type" content="website"><meta property="og:title" content="Calculadora de coste de viaje en coche"><meta property="og:description" content="Calcula el coste de un viaje en coche con combustible, peajes, ida y vuelta y reparto entre pasajeros."><meta property="og:url" content="https://danielcarmona-space.github.io/calculadora-combustible/calcular-coste-viaje/"><meta name="theme-color" content="#075bd3"><style>body{font-family:Arial,sans-serif;max-width:920px;margin:auto;padding:20px;background:#f5f5f5;color:#222;line-height:1.55}.card{background:#fff;padding:25px;border-radius:14px;margin:15px 0;box-shadow:0 2px 10px #0001}nav{display:flex;gap:12px;flex-wrap:wrap;margin:15px 0}a{color:#075bd3;text-decoration:none}a:hover{text-decoration:underline}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}label{display:block;font-weight:bold}input{width:100%;box-sizing:border-box;padding:11px;margin-top:6px;border:1px solid #ccc;border-radius:8px;font:inherit}button{padding:12px 18px;border:0;border-radius:8px;background:#075bd3;color:white;font-weight:bold;cursor:pointer;margin-top:15px;font:inherit}.result{font-size:1.08rem;line-height:1.9}.muted{color:#555}.links{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}.links a{display:block;padding:12px;border:1px solid #ddd;border-radius:9px;background:#fafafa}h1,h2{line-height:1.2}footer{font-size:.9rem;color:#666;padding:10px 0 30px}</style><script async src="https://www.googletagmanager.com/gtag/js?id=G-RGNDGLHEZR"></script>
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Calculadora de coste de viaje en coche</title>
+<meta name="description" content="Calcula el coste de un viaje en coche con combustible, peajes, ida y vuelta y reparto entre pasajeros.">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://danielcarmona-space.github.io/calculadora-combustible/calcular-coste-viaje/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Calculadora de coste de viaje en coche">
+<meta property="og:description" content="Calcula el coste de un viaje en coche con combustible, peajes, ida y vuelta y reparto entre pasajeros.">
+<meta property="og:url" content="https://danielcarmona-space.github.io/calculadora-combustible/calcular-coste-viaje/">
+<meta name="theme-color" content="#075bd3">
+<style>
+:root{--primary:#075bd3;--bg:#f5f7fa;--card:#fff;--text:#222;--muted:#5f6368;--border:#dfe3e8}
+*{box-sizing:border-box}
+body{font-family:Arial,Helvetica,sans-serif;max-width:960px;margin:0 auto;padding:20px;background:var(--bg);color:var(--text);line-height:1.6}
+.card{background:var(--card);padding:25px;border-radius:14px;margin:15px 0;box-shadow:0 2px 10px #0001}
+nav{display:flex;gap:10px;flex-wrap:wrap;margin:15px 0}
+nav a,.links a{color:var(--primary);text-decoration:none}
+nav a:hover,.links a:hover{text-decoration:underline}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:15px}
+label{display:block;font-weight:700}
+input{width:100%;box-sizing:border-box;padding:11px;margin-top:6px;border:1px solid #c9ced6;border-radius:8px;font:inherit;background:#fff}
+input[type=checkbox]{width:auto;margin-right:7px}
+button{padding:12px 18px;border:0;border-radius:8px;background:var(--primary);color:#fff;font-weight:700;cursor:pointer;margin-top:15px;font:inherit}
+button:hover{filter:brightness(.95)}
+.result{font-size:1.08rem;line-height:1.9}
+.muted{color:var(--muted)}
+.links{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.links a{display:block;padding:12px;border:1px solid var(--border);border-radius:9px;background:#fafafa}
+h1,h2,h3{line-height:1.25}
+h1{margin-top:0}
+footer{font-size:.9rem;color:var(--muted);padding:10px 0 30px}
+footer nav{margin-top:8px}
+.small{font-size:.92rem}
+.notice{background:#eef5ff;border-left:4px solid var(--primary);padding:12px 15px;border-radius:6px}
+.cookie-banner{position:fixed;left:16px;right:16px;bottom:16px;z-index:9999;background:#fff;border:1px solid var(--border);box-shadow:0 4px 20px #0002;border-radius:12px;padding:16px;max-width:900px;margin:auto}
+.cookie-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.cookie-actions button{margin-top:0}
+button.secondary{background:#e9eef5;color:#222}
+@media(max-width:600px){body{padding:12px}.card{padding:18px}}
+</style>
+
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-RGNDGLHEZR');
-</script></head><body><div class="card"><h1>Calculadora de coste de viaje en coche</h1><p>Calcula cuánto cuesta un trayecto teniendo en cuenta combustible, peajes y número de pasajeros.</p><nav><a href="../">Calculadora</a><a href="../calcular-coste-viaje/">Coste de viaje</a><a href="../calcular-consumo-coche/">Consumo</a><a href="../coste-gasolina-por-km/">Coste por km</a><a href="../gasolina-vs-diesel/">Gasolina vs diésel</a><a href="../calculadora-coche-electrico/">Coche eléctrico</a></nav></div><div class="card"><h2>Datos del viaje</h2><div class="grid"><label>Distancia de ida (km)<input id="distance" type="number" min="0" step="0.1"></label><label>Precio combustible (€/L)<input id="price" type="number" min="0" step="0.001"></label><label>Consumo (L/100 km)<input id="consumption" type="number" min="0" step="0.1"></label><label>Personas<input id="people" type="number" min="1" step="1" value="1"></label><label>Peajes (€)<input id="tolls" type="number" min="0" step="0.01" value="0"></label><label>Depósito (L, opcional)<input id="tank" type="number" min="0" step="0.1" value="50"></label></div><label style="margin-top:15px"><input id="roundtrip" type="checkbox" style="width:auto"> Ida y vuelta</label><button onclick="calculate()">Calcular viaje</button></div><div class="card"><h2>Resultado</h2><div id="result" class="result" aria-live="polite">Introduce los datos y pulsa «Calcular viaje».</div></div><div class="card"><h2>Cómo se calcula</h2><p>Los litros se estiman multiplicando la distancia total por el consumo y dividiendo entre 100. El coste de combustible es el resultado multiplicado por el precio por litro. Finalmente se añaden los peajes.</p><p>Para un viaje de ida y vuelta, la distancia se duplica antes de calcular el combustible.</p></div><div class="card"><h2>También puede interesarte</h2><nav><a href="../">Calculadora</a><a href="../calcular-coste-viaje/">Coste de viaje</a><a href="../calcular-consumo-coche/">Consumo</a><a href="../coste-gasolina-por-km/">Coste por km</a><a href="../gasolina-vs-diesel/">Gasolina vs diésel</a><a href="../calculadora-coche-electrico/">Coche eléctrico</a></nav></div><footer>Calculadora de combustible y coste de viaje. Resultados orientativos según los datos introducidos.</footer><script>function calculate(){const d=+distance.value,p=+price.value,c=+consumption.value,n=+people.value,t=+tolls.value||0,tankv=+tank.value||0,rt=roundtrip.checked,r=result;if(!(d>0&&p>=0&&c>0&&n>=1)){r.textContent='Introduce distancia, precio, consumo y personas con valores válidos.';return}const totalD=rt?d*2:d,liters=totalD*c/100,fuel=liters*p,total=fuel+t;let h='<b>Distancia total:</b> '+totalD.toFixed(1)+' km<br><b>Combustible:</b> '+liters.toFixed(2)+' L<br><b>Coste combustible:</b> '+fuel.toFixed(2)+' €<br><b>Peajes:</b> '+t.toFixed(2)+' €<br><b>Coste total:</b> '+total.toFixed(2)+' €<br><b>Coste por persona:</b> '+(total/n).toFixed(2)+' €<br><b>Coste por 100 km:</b> '+(total/totalD*100).toFixed(2)+' €';if(tankv>0)h+='<br><b>Autonomía aproximada:</b> '+(tankv*100/c).toFixed(0)+' km';r.innerHTML=h;}</script></body></html>
+window.dataLayer=window.dataLayer||[];
+function gtag(){dataLayer.push(arguments);}
+gtag('consent','default',{'analytics_storage':'denied','ad_storage':'denied','ad_user_data':'denied','ad_personalization':'denied','wait_for_update':500});
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-RGNDGLHEZR"></script>
+<script>
+gtag('js',new Date());
+gtag('config','G-RGNDGLHEZR',{'anonymize_ip':true});
+function grantAnalyticsConsent(){
+  localStorage.setItem('analyticsConsent','granted');
+  gtag('consent','update',{'analytics_storage':'granted'});
+  document.getElementById('cookie-banner')?.remove();
+}
+function denyAnalyticsConsent(){
+  localStorage.setItem('analyticsConsent','denied');
+  document.getElementById('cookie-banner')?.remove();
+}
+function setupConsent(){
+  const v=localStorage.getItem('analyticsConsent');
+  if(v==='granted') gtag('consent','update',{'analytics_storage':'granted'});
+  if(v===null){
+    const b=document.createElement('div');
+    b.id='cookie-banner';
+    b.className='cookie-banner';
+    b.innerHTML='<strong>Privacidad y cookies</strong><p class="small">Usamos Google Analytics para conocer de forma agregada cómo se utiliza esta web y mejorarla. Puedes aceptar o rechazar estas cookies de analítica.</p><div class="cookie-actions"><button onclick="grantAnalyticsConsent()">Aceptar analítica</button><button class="secondary" onclick="denyAnalyticsConsent()">Rechazar</button><a href="https://danielcarmona-space.github.io/calculadora-combustible/politica-cookies/">Más información</a></div>';
+    document.body.appendChild(b);
+  }
+document.addEventListener('DOMContentLoaded',setupConsent);
+</script>
+
+</head>
+<body>
+
+<div class="card"><h1>Calculadora de coste de viaje en coche</h1>
+<p>Calcula cuánto cuesta un trayecto teniendo en cuenta combustible, peajes, ida y vuelta y número de pasajeros.</p>
+<nav aria-label="Navegación principal">
+<a href="https://danielcarmona-space.github.io/calculadora-combustible/">Calculadora</a>
+<a href="https://danielcarmona-space.github.io/calculadora-combustible/calcular-coste-viaje/">Coste de viaje</a>
+<a href="https://danielcarmona-space.github.io/calculadora-combustible/calcular-consumo-coche/">Consumo</a>
+<a href="https://danielcarmona-space.github.io/calculadora-combustible/coste-gasolina-por-km/">Coste por km</a>
+<a href="https://danielcarmona-space.github.io/calculadora-combustible/gasolina-vs-diesel/">Gasolina vs diésel</a>
+<a href="https://danielcarmona-space.github.io/calculadora-combustible/calculadora-coche-electrico/">Coche eléctrico</a>
+</nav>
+</div>
+<div class="card"><h2>Datos del viaje</h2>
+<div class="grid">
+<label>Distancia de ida (km)<input id="distance" type="number" min="0" step="0.1" inputmode="decimal"></label>
+<label>Precio combustible (€/L)<input id="price" type="number" min="0" step="0.001" inputmode="decimal"></label>
+<label>Consumo (L/100 km)<input id="consumption" type="number" min="0" step="0.1" inputmode="decimal"></label>
+<label>Personas<input id="people" type="number" min="1" step="1" value="1"></label>
+<label>Peajes (€)<input id="tolls" type="number" min="0" step="0.01" value="0" inputmode="decimal"></label>
+<label>Depósito (L, opcional)<input id="tank" type="number" min="0" step="0.1" value="50" inputmode="decimal"></label>
+</div>
+<label style="margin-top:15px;font-weight:400"><input id="roundtrip" type="checkbox"> Ida y vuelta</label>
+<button type="button" onclick="calculate()">Calcular viaje</button>
+</div>
+<div class="card"><h2>Resultado</h2><div id="result" class="result" aria-live="polite">Introduce los datos y pulsa «Calcular viaje».</div></div>
+<div class="card"><h2>Cómo calcular el coste de un viaje en coche</h2>
+<p>Primero se obtiene la distancia total. Para un viaje de ida y vuelta, la distancia de ida se multiplica por dos.</p>
+<p>Después se calcula el combustible necesario: <strong>distancia total × consumo ÷ 100</strong>. El coste del combustible es el resultado multiplicado por el precio por litro.</p>
+<p>Por último se añaden los peajes. Si varias personas comparten el viaje, el coste total se divide entre ellas.</p>
+<h2>Ejemplo</h2><p>Un trayecto de 250 km, consumo de 6,5 L/100 km, gasolina a 1,60 €/L y 10 € de peajes requiere 16,25 litros. El combustible cuesta 26,00 € y el coste total del trayecto es 36,00 €.</p>
+</div>
+<div class="card"><h2>También puede interesarte</h2><div class="links">
+<a href="https://danielcarmona-space.github.io/calculadora-combustible/calcular-consumo-coche/">Calcular consumo del coche</a>
+<a href="https://danielcarmona-space.github.io/calculadora-combustible/coste-gasolina-por-km/">Coste de gasolina por km</a>
+<a href="https://danielcarmona-space.github.io/calculadora-combustible/gasolina-vs-diesel/">Gasolina vs diésel</a>
+<a href="https://danielcarmona-space.github.io/calculadora-combustible/calculadora-coche-electrico/">Coste de coche eléctrico</a>
+</div></div>
+
+
+<footer>
+  <div>Calculadora de combustible y coste de viaje. Resultados orientativos según los datos introducidos.</div>
+  <nav class="small">
+    <a href="https://danielcarmona-space.github.io/calculadora-combustible/aviso-legal/">Aviso legal</a>
+    <a href="https://danielcarmona-space.github.io/calculadora-combustible/politica-privacidad/">Privacidad</a>
+    <a href="https://danielcarmona-space.github.io/calculadora-combustible/politica-cookies/">Cookies</a>
+    <a href="https://danielcarmona-space.github.io/calculadora-combustible/contacto/">Contacto</a>
+  </nav>
+</footer>
+
+<script>
+function calculate(){
+ const d=+document.getElementById('distance').value,p=+document.getElementById('price').value,c=+document.getElementById('consumption').value,n=+document.getElementById('people').value,t=+document.getElementById('tolls').value||0,tank=+document.getElementById('tank').value||0,rt=document.getElementById('roundtrip').checked,r=document.getElementById('result');
+ if(!(d>0&&p>=0&&c>0&&n>=1&&t>=0)){r.textContent='Introduce distancia, precio, consumo y personas con valores válidos.';return}
+ const totalD=rt?d*2:d,liters=totalD*c/100,fuel=liters*p,total=fuel+t;
+ let h='<b>Distancia total:</b> '+totalD.toFixed(1)+' km<br><b>Combustible:</b> '+liters.toFixed(2)+' L<br><b>Coste combustible:</b> '+fuel.toFixed(2)+' €<br><b>Peajes:</b> '+t.toFixed(2)+' €<br><b>Coste total:</b> '+total.toFixed(2)+' €<br><b>Coste por persona:</b> '+(total/n).toFixed(2)+' €<br><b>Coste por 100 km:</b> '+(total/totalD*100).toFixed(2)+' €';
+ if(tank>0) h+='<br><b>Autonomía aproximada:</b> '+(tank*100/c).toFixed(0)+' km';
+ r.innerHTML=h;
+}
+</script>
+</body>
+</html>
