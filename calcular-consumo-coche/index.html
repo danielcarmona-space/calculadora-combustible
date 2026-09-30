@@ -1,7 +1,117 @@
-<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Calculadora de consumo de coche</title><meta name="description" content="Calcula el consumo de tu coche en litros por 100 km a partir de los kilómetros recorridos y los litros utilizados."><meta name="robots" content="index,follow"><link rel="canonical" href="https://danielcarmona-space.github.io/calculadora-combustible/calcular-consumo-coche/"><meta property="og:type" content="website"><meta property="og:title" content="Calculadora de consumo de coche"><meta property="og:description" content="Calcula el consumo de tu coche en litros por 100 km a partir de los kilómetros recorridos y los litros utilizados."><meta property="og:url" content="https://danielcarmona-space.github.io/calculadora-combustible/calcular-consumo-coche/"><meta name="theme-color" content="#075bd3"><style>body{font-family:Arial,sans-serif;max-width:920px;margin:auto;padding:20px;background:#f5f5f5;color:#222;line-height:1.55}.card{background:#fff;padding:25px;border-radius:14px;margin:15px 0;box-shadow:0 2px 10px #0001}nav{display:flex;gap:12px;flex-wrap:wrap;margin:15px 0}a{color:#075bd3;text-decoration:none}a:hover{text-decoration:underline}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}label{display:block;font-weight:bold}input{width:100%;box-sizing:border-box;padding:11px;margin-top:6px;border:1px solid #ccc;border-radius:8px;font:inherit}button{padding:12px 18px;border:0;border-radius:8px;background:#075bd3;color:white;font-weight:bold;cursor:pointer;margin-top:15px;font:inherit}.result{font-size:1.08rem;line-height:1.9}.muted{color:#555}.links{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}.links a{display:block;padding:12px;border:1px solid #ddd;border-radius:9px;background:#fafafa}h1,h2{line-height:1.2}footer{font-size:.9rem;color:#666;padding:10px 0 30px}</style><script async src="https://www.googletagmanager.com/gtag/js?id=G-RGNDGLHEZR"></script>
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Calculadora de consumo de coche</title>
+<meta name="description" content="Calcula el consumo de tu coche en litros por 100 km a partir de los kilómetros recorridos y los litros utilizados.">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://danielcarmona-space.github.io/calculadora-combustible/calcular-consumo-coche/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Calculadora de consumo de coche">
+<meta property="og:description" content="Calcula el consumo de tu coche en litros por 100 km a partir de los kilómetros recorridos y los litros utilizados.">
+<meta property="og:url" content="https://danielcarmona-space.github.io/calculadora-combustible/calcular-consumo-coche/">
+<meta name="theme-color" content="#075bd3">
+<style>
+:root{--primary:#075bd3;--bg:#f5f7fa;--card:#fff;--text:#222;--muted:#5f6368;--border:#dfe3e8}
+*{box-sizing:border-box}
+body{font-family:Arial,Helvetica,sans-serif;max-width:960px;margin:0 auto;padding:20px;background:var(--bg);color:var(--text);line-height:1.6}
+.card{background:var(--card);padding:25px;border-radius:14px;margin:15px 0;box-shadow:0 2px 10px #0001}
+nav{display:flex;gap:10px;flex-wrap:wrap;margin:15px 0}
+nav a,.links a{color:var(--primary);text-decoration:none}
+nav a:hover,.links a:hover{text-decoration:underline}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:15px}
+label{display:block;font-weight:700}
+input{width:100%;box-sizing:border-box;padding:11px;margin-top:6px;border:1px solid #c9ced6;border-radius:8px;font:inherit;background:#fff}
+input[type=checkbox]{width:auto;margin-right:7px}
+button{padding:12px 18px;border:0;border-radius:8px;background:var(--primary);color:#fff;font-weight:700;cursor:pointer;margin-top:15px;font:inherit}
+button:hover{filter:brightness(.95)}
+.result{font-size:1.08rem;line-height:1.9}
+.muted{color:var(--muted)}
+.links{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.links a{display:block;padding:12px;border:1px solid var(--border);border-radius:9px;background:#fafafa}
+h1,h2,h3{line-height:1.25}
+h1{margin-top:0}
+footer{font-size:.9rem;color:var(--muted);padding:10px 0 30px}
+footer nav{margin-top:8px}
+.small{font-size:.92rem}
+.notice{background:#eef5ff;border-left:4px solid var(--primary);padding:12px 15px;border-radius:6px}
+.cookie-banner{position:fixed;left:16px;right:16px;bottom:16px;z-index:9999;background:#fff;border:1px solid var(--border);box-shadow:0 4px 20px #0002;border-radius:12px;padding:16px;max-width:900px;margin:auto}
+.cookie-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.cookie-actions button{margin-top:0}
+button.secondary{background:#e9eef5;color:#222}
+@media(max-width:600px){body{padding:12px}.card{padding:18px}}
+</style>
+
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-RGNDGLHEZR');
-</script></head><body><div class="card"><h1>Calculadora de consumo de coche</h1><p>Descubre el consumo real de tu coche en L/100 km usando los kilómetros recorridos y los litros consumidos.</p><nav><a href="../">Calculadora</a><a href="../calcular-coste-viaje/">Coste de viaje</a><a href="../calcular-consumo-coche/">Consumo</a><a href="../coste-gasolina-por-km/">Coste por km</a><a href="../gasolina-vs-diesel/">Gasolina vs diésel</a><a href="../calculadora-coche-electrico/">Coche eléctrico</a></nav></div><div class="card"><h2>Calcular consumo</h2><label>Kilómetros recorridos<input id="km" type="number" min="0" step="0.1"></label><label>Litros consumidos<input id="liters" type="number" min="0" step="0.01"></label><button onclick="calc()">Calcular consumo</button><div id="r" class="result" aria-live="polite"></div></div><div class="card"><h2>Fórmula del consumo</h2><p>La fórmula es <strong>litros consumidos ÷ kilómetros recorridos × 100</strong>. Por ejemplo, si recorres 500 km y utilizas 35 litros, el consumo es 7 L/100 km.</p><p>Para obtener un dato más representativo, puedes medirlo entre dos repostajes y recorrer varios cientos de kilómetros.</p></div><div class="card"><h2>Más herramientas</h2><div class="links"><a href="../">Calculadora de combustible</a><a href="../coste-gasolina-por-km/">Coste de gasolina por km</a><a href="../calcular-coste-viaje/">Coste de un viaje</a></div></div><footer>Calculadora de combustible y coste de viaje. Resultados orientativos según los datos introducidos.</footer><script>function calc(){const k=+km.value,l=+liters.value;if(k>0&&l>=0)r.innerHTML='<b>Consumo:</b> '+(l/k*100).toFixed(2)+' L/100 km';else r.textContent='Introduce kilómetros y litros con valores válidos.'}</script></body></html>
+window.dataLayer=window.dataLayer||[];
+function gtag(){dataLayer.push(arguments);}
+gtag('consent','default',{'analytics_storage':'denied','ad_storage':'denied','ad_user_data':'denied','ad_personalization':'denied','wait_for_update':500});
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-RGNDGLHEZR"></script>
+<script>
+gtag('js',new Date());
+gtag('config','G-RGNDGLHEZR',{'anonymize_ip':true});
+function grantAnalyticsConsent(){
+  localStorage.setItem('analyticsConsent','granted');
+  gtag('consent','update',{'analytics_storage':'granted'});
+  document.getElementById('cookie-banner')?.remove();
+}
+function denyAnalyticsConsent(){
+  localStorage.setItem('analyticsConsent','denied');
+  document.getElementById('cookie-banner')?.remove();
+}
+function setupConsent(){
+  const v=localStorage.getItem('analyticsConsent');
+  if(v==='granted') gtag('consent','update',{'analytics_storage':'granted'});
+  if(v===null){
+    const b=document.createElement('div');
+    b.id='cookie-banner';
+    b.className='cookie-banner';
+    b.innerHTML='<strong>Privacidad y cookies</strong><p class="small">Usamos Google Analytics para conocer de forma agregada cómo se utiliza esta web y mejorarla. Puedes aceptar o rechazar estas cookies de analítica.</p><div class="cookie-actions"><button onclick="grantAnalyticsConsent()">Aceptar analítica</button><button class="secondary" onclick="denyAnalyticsConsent()">Rechazar</button><a href="https://danielcarmona-space.github.io/calculadora-combustible/politica-cookies/">Más información</a></div>';
+    document.body.appendChild(b);
+  }
+document.addEventListener('DOMContentLoaded',setupConsent);
+</script>
+
+</head>
+<body>
+
+<div class="card"><h1>Calculadora de consumo de coche</h1>
+<p>Descubre el consumo real de tu coche en litros por 100 km usando los kilómetros recorridos y los litros consumidos.</p>
+<nav aria-label="Navegación principal">
+<a href="https://danielcarmona-space.github.io/calculadora-combustible/">Calculadora</a>
+<a href="https://danielcarmona-space.github.io/calculadora-combustible/calcular-coste-viaje/">Coste de viaje</a>
+<a href="https://danielcarmona-space.github.io/calculadora-combustible/calcular-consumo-coche/">Consumo</a>
+<a href="https://danielcarmona-space.github.io/calculadora-combustible/coste-gasolina-por-km/">Coste por km</a>
+<a href="https://danielcarmona-space.github.io/calculadora-combustible/gasolina-vs-diesel/">Gasolina vs diésel</a>
+<a href="https://danielcarmona-space.github.io/calculadora-combustible/calculadora-coche-electrico/">Coche eléctrico</a>
+</nav>
+</div>
+<div class="card"><h2>Calcular consumo</h2>
+<div class="grid"><label>Kilómetros recorridos<input id="km" type="number" min="0" step="0.1" inputmode="decimal"></label>
+<label>Litros consumidos<input id="liters" type="number" min="0" step="0.01" inputmode="decimal"></label></div>
+<button type="button" onclick="calc()">Calcular consumo</button><div id="r" class="result" aria-live="polite"></div></div>
+<div class="card"><h2>Fórmula del consumo</h2>
+<p>La fórmula es <strong>litros consumidos ÷ kilómetros recorridos × 100</strong>.</p>
+<p>Por ejemplo, si recorres 500 km y utilizas 35 litros, el consumo es de 7 L/100 km.</p>
+<p>Para obtener un dato más representativo, puedes medirlo entre dos repostajes y durante varios cientos de kilómetros.</p>
+<h2>¿Por qué puede variar el consumo?</h2><p>La velocidad, el tráfico, la carga del vehículo, la temperatura, el tipo de recorrido y el estilo de conducción pueden modificar el consumo real.</p></div>
+<div class="card"><h2>Más herramientas</h2><div class="links"><a href="https://danielcarmona-space.github.io/calculadora-combustible/">Calculadora de combustible</a><a href="https://danielcarmona-space.github.io/calculadora-combustible/coste-gasolina-por-km/">Coste de gasolina por km</a><a href="https://danielcarmona-space.github.io/calculadora-combustible/calcular-coste-viaje/">Coste de un viaje</a></div></div>
+
+
+<footer>
+  <div>Calculadora de combustible y coste de viaje. Resultados orientativos según los datos introducidos.</div>
+  <nav class="small">
+    <a href="https://danielcarmona-space.github.io/calculadora-combustible/aviso-legal/">Aviso legal</a>
+    <a href="https://danielcarmona-space.github.io/calculadora-combustible/politica-privacidad/">Privacidad</a>
+    <a href="https://danielcarmona-space.github.io/calculadora-combustible/politica-cookies/">Cookies</a>
+    <a href="https://danielcarmona-space.github.io/calculadora-combustible/contacto/">Contacto</a>
+  </nav>
+</footer>
+
+<script>
+function calc(){const k=+document.getElementById('km').value,l=+document.getElementById('liters').value,r=document.getElementById('r');if(k>0&&l>=0)r.innerHTML='<b>Consumo:</b> '+(l/k*100).toFixed(2)+' L/100 km';else r.textContent='Introduce kilómetros y litros con valores válidos.'}
+</script>
+</body>
+</html>
