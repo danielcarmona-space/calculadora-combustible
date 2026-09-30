@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Calculadora gratuita de combustible para viajes. Calcula litros, coste, coste por persona y compara vehículos.">
+  <title>Calculadora de combustible | Viaje</title>
+  <style>
+    :root{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:#17202a;background:#f6f7f9}
+    *{box-sizing:border-box} body{margin:0} .wrap{max-width:980px;margin:auto;padding:32px 18px}
+    header{text-align:center;margin-bottom:28px} h1{margin:0 0 8px;font-size:clamp(28px,5vw,44px)}
+    .sub{color:#65717d;margin:0}.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    .card{background:#fff;border:1px solid #dde2e7;border-radius:18px;padding:22px;box-shadow:0 5px 20px #17202a0d}
+    h2{font-size:20px;margin:0 0 16px}.fields{display:grid;gap:14px}.two{grid-template-columns:1fr 1fr}
+    label{display:grid;gap:7px;font-size:14px;font-weight:600} input{width:100%;padding:12px 13px;border:1px solid #cfd6dd;border-radius:11px;font:inherit;background:#fff}
+    input:focus{outline:3px solid #2563eb22;border-color:#2563eb}.check{display:flex;align-items:center;gap:10px;font-weight:500}.check input{width:18px}
+    button{border:0;border-radius:11px;padding:13px 16px;font:inherit;font-weight:700;background:#2563eb;color:white;cursor:pointer}
+    button:hover{background:#1d4ed8}.error{color:#b42318;min-height:20px;font-size:14px}.muted{color:#65717d;font-size:13px}
+    .results{display:grid;gap:11px}.metric{border:1px solid #e1e5e9;border-radius:13px;padding:15px}.metric .label{color:#65717d;font-size:13px}.metric .value{font-size:24px;font-weight:750;margin-top:4px}
+    .compare{background:#f4f7fb}.hidden{display:none}.footer{text-align:center;color:#7a858f;font-size:13px;margin:24px 0}
+    @media(max-width:720px){.grid{grid-template-columns:1fr}.two{grid-template-columns:1fr 1fr}.card{padding:18px}}
+    @media(max-width:430px){.two{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Calculadora de combustible</h1>
+    <p class="sub">Calcula cuánto combustible necesitas y cuánto te costará tu viaje.</p>
+  </header>
+
+  <main class="grid">
+    <section class="card">
+      <h2>Datos del viaje</h2>
+      <form id="form" class="fields">
+        <div class="grid two">
+          <label>Distancia de ida (km)
+            <input id="distance" type="number" min="0.1" step="0.1" value="250" required>
+          </label>
+          <label>Precio combustible (€/L)
+            <input id="price" type="number" min="0" step="0.001" value="1.55" required>
+          </label>
+        </div>
+        <div class="grid two">
+          <label>Consumo vehículo A (L/100 km)
+            <input id="consA" type="number" min="0.1" step="0.1" value="6.5" required>
+          </label>
+          <label>Consumo vehículo B (opcional)
+            <input id="consB" type="number" min="0.1" step="0.1" placeholder="Ej. 5.2">
+          </label>
+        </div>
+        <div class="grid two">
+          <label>Peajes (€)
+            <input id="tolls" type="number" min="0" step="0.01" value="0">
+          </label>
+          <label>Personas
+            <input id="people" type="number" min="1" step="1" value="1">
+          </label>
+        </div>
+        <label>Capacidad del depósito (L, opcional)
+          <input id="tank" type="number" min="0" step="0.1" placeholder="Ej. 50">
+        </label>
+        <label class="check"><input id="roundTrip" type="checkbox"> Calcular ida y vuelta</label>
+        <button type="submit">Calcular viaje</button>
+        <div id="error" class="error" aria-live="polite"></div>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>Resultado</h2>
+      <div id="empty" class="muted">Introduce los datos y pulsa «Calcular viaje».</div>
+      <div id="results" class="results hidden" aria-live="polite">
+        <div class="metric"><div class="label">Distancia total</div><div id="totalDistance" class="value">—</div></div>
+        <div class="grid two">
+          <div class="metric"><div class="label">Combustible necesario</div><div id="litersA" class="value">—</div></div>
+          <div class="metric"><div class="label">Coste total</div><div id="costA" class="value">—</div></div>
+        </div>
+        <div class="grid two">
+          <div class="metric"><div class="label">Coste por persona</div><div id="perPerson" class="value">—</div></div>
+          <div class="metric"><div class="label">Coste por 100 km</div><div id="per100" class="value">—</div></div>
+        </div>
+        <div id="rangeBox" class="metric hidden"><div class="label">Autonomía aproximada</div><div id="range" class="value">—</div></div>
+        <div id="compareBox" class="metric compare hidden">
+          <div class="label">Comparación con vehículo B</div>
+          <div id="compareText" style="margin-top:7px;font-weight:650">—</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <p class="footer">Calculadora gratuita · Los cálculos son estimaciones.</p>
+</div>
+
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const fmt = n => new Intl.NumberFormat('es-ES',{minimumFractionDigits:2,maximumFractionDigits:2}).format(n);
+  $('form').addEventListener('submit', e => {
+    e.preventDefault();
+    const d=+$('distance').value, p=+$('price').value, a=+$('consA').value;
+    const tolls=+$('tolls').value||0, people=Math.max(1,Math.floor(+$('people').value||1));
+    const bRaw=$('consB').value.trim(), tRaw=$('tank').value.trim();
+    const b=bRaw?+bRaw:null, tank=tRaw?+tRaw:null;
+    if(!(d>0&&p>=0&&a>0)|| (bRaw && !(b>0)) || (tRaw && !(tank>0)) || tolls<0){
+      $('error').textContent='Revisa los valores introducidos.'; return;
+    }
+    $('error').textContent='';
+    const totalD=d*($('roundTrip').checked?2:1);
+    const liters=totalD*a/100, fuel=liters*p, total=fuel+tolls;
+    $('totalDistance').textContent=fmt(totalD)+' km';
+    $('litersA').textContent=fmt(liters)+' L';
+    $('costA').textContent=fmt(total)+' €';
+    $('perPerson').textContent=fmt(total/people)+' €';
+    $('per100').textContent=fmt(total/totalD*100)+' €';
+    if(tank){$('range').textContent=fmt(tank*100/a)+' km';$('rangeBox').classList.remove('hidden')}
+    else $('rangeBox').classList.add('hidden');
+    if(b){
+      const totalB=totalD*b/100*p+tolls, diff=totalB-total;
+      $('compareText').textContent=(diff<0?'El vehículo B ahorra '+fmt(-diff)+' € en este viaje.':diff>0?'El vehículo A ahorra '+fmt(diff)+' € en este viaje.':'Ambos vehículos cuestan prácticamente lo mismo.')+' Coste B: '+fmt(totalB)+' €.';
+      $('compareBox').classList.remove('hidden');
+    } else $('compareBox').classList.add('hidden');
+    $('empty').classList.add('hidden'); $('results').classList.remove('hidden');
+  });
+})();
+</script>
+</body>
+</html>
