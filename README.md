@@ -1,7 +1,3 @@
-# Calculadora de combustible V2
+# Calculadora de combustible V2 corregida
 
-Sube todos estos archivos a la raíz de tu repositorio de GitHub.
-
-Después: Settings → Pages → Deploy from a branch → main → / (root).
-
-La web es estática y no necesita servidor ni base de datos.
+Sube todo el contenido de esta carpeta a la raíz del repositorio de GitHub Pages. Las rutas relativas de navegación han sido corregidas.
