@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://danielcarmona-space.github.io/calculadora-combustible/sitemap.xml
