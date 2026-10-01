@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Gasolineras baratas y precios de combustible | RutaFuel</title>
+  <meta name="description" content="Compara precios oficiales de gasolina 95, gasolina 98, gasóleo y GLP por provincia y municipio en España.">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <meta name="theme-color" content="#2563eb">
+  <meta name="color-scheme" content="light">
+  <link rel="manifest" href="/calculadora-combustible/manifest.webmanifest">
+  <link rel="canonical" href="https://danielcarmona-space.github.io/calculadora-combustible/gasolineras/">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="es_ES">
+  <meta property="og:title" content="Gasolineras baratas y precios de combustible | RutaFuel">
+  <meta property="og:description" content="Compara precios oficiales de gasolina 95, gasolina 98, gasóleo y GLP por provincia y municipio en España.">
+  <meta property="og:url" content="https://danielcarmona-space.github.io/calculadora-combustible/gasolineras/">
+  <meta property="og:site_name" content="RutaFuel">
+  <meta name="twitter:card" content="summary">
+  <link rel="icon" href="/calculadora-combustible/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/calculadora-combustible/assets/styles.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+
+</head><body>
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+<header class="site-header">
+  <div class="nav-shell">
+    <a class="brand" href="/calculadora-combustible/" aria-label="RutaFuel, inicio">
+      <span class="brand-mark">R</span>
+      <span>RutaFuel<small>coste de movilidad</small></span>
+    </a>
+    <button class="nav-toggle" data-nav-toggle type="button" aria-expanded="false" aria-label="Abrir menú">☰</button>
+    <nav class="main-nav" data-main-nav aria-label="Navegación principal"><a href="/calculadora-combustible/">Inicio</a><a href="/calculadora-combustible/planificador-ruta/">Planificador</a><a href="/calculadora-combustible/gasolineras/" aria-current="page">Gasolineras</a><a href="/calculadora-combustible/calcular-coste-viaje/">Coste de viaje</a><a href="/calculadora-combustible/calcular-consumo-coche/">Consumo</a><a href="/calculadora-combustible/calculadora-coche-electrico/">Eléctrico</a></nav>
+  </div>
+</header><main id="contenido">
+  <section class="page-hero"><div class="container"><span class="eyebrow">Datos oficiales de carburantes</span><h1>Compara gasolineras y encuentra el mejor precio de tu zona</h1><p class="lead">Selecciona provincia, municipio y combustible. Ordenamos las estaciones por precio y las mostramos en el mapa.</p></div></section>
+  <section class="section"><div class="container">
+    <div class="card" style="margin-bottom:18px">
+      <div class="station-toolbar">
+        <label class="field">Provincia<select id="province"><option value="">Cargando provincias…</option></select></label>
+        <label class="field">Municipio<select id="municipality" disabled><option value="">Todos los municipios</option></select></label>
+        <label class="field">Combustible<select id="fuel"><option value="Precio Gasolina 95 E5">Gasolina 95 E5</option><option value="Precio Gasoleo A">Gasóleo A</option><option value="Precio Gasolina 98 E5">Gasolina 98 E5</option><option value="Precio Gasoleo Premium">Gasóleo Premium</option><option value="Precio Gases licuados del petróleo">GLP</option></select></label>
+        <label class="field">Buscar estación<input id="station-search" type="search" placeholder="Marca, calle, localidad"></label>
+      </div>
+      <div class="form-actions"><button class="button primary" id="load-stations" type="button">Buscar precios</button><button class="button secondary" id="sort-distance" type="button" disabled>◎ Ordenar por distancia</button></div>
+      <div class="status-line" style="margin-top:12px"><span class="status-dot"></span><span id="data-date">Fuente: servicio público de precios de carburantes.</span></div>
+    </div>
+    <div class="map-layout" style="grid-template-columns:minmax(0,1.15fr) minmax(340px,.85fr)">
+      <div><div id="stations-map" aria-label="Mapa de gasolineras"></div><p class="tiny muted" style="margin:10px 2px 0">Mapa © OpenStreetMap. Los precios proceden del servicio público y pueden cambiar después de la consulta.</p></div>
+      <aside class="card" style="max-height:610px;overflow:auto"><div style="display:flex;justify-content:space-between;align-items:end;gap:10px"><div><div class="kicker">Resultados</div><h2 style="font-size:1.4rem;margin-top:4px">Gasolineras</h2></div><strong id="station-count" class="muted">0</strong></div><div id="station-list" class="station-list"><p class="muted">Selecciona una provincia y pulsa «Buscar precios».</p></div></aside>
+    </div>
+  </div></section>
+  <section class="section"><div class="container grid grid-3">
+    <article class="card"><h3>¿De dónde salen los precios?</h3><p>La web consulta el servicio REST público de precios de carburantes. RutaFuel no inventa ni modifica el precio comunicado por cada estación.</p></article>
+    <article class="card"><h3>¿Qué significa “más barata”?</h3><p>El orden se refiere únicamente al precio del combustible seleccionado entre las estaciones que devolvió la consulta.</p></article>
+    <article class="card"><h3>Comprueba antes de repostar</h3><p>El precio puede cambiar entre la consulta y tu llegada. La ficha muestra la fecha de actualización que devuelve el servicio.</p></article>
+  </div></section>
+</main>
+
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+  const API='https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes';
+  const province=document.getElementById('province'), municipality=document.getElementById('municipality'), fuel=document.getElementById('fuel'), search=document.getElementById('station-search'), list=document.getElementById('station-list'), count=document.getElementById('station-count'), dateEl=document.getElementById('data-date'), distBtn=document.getElementById('sort-distance');
+  const map=L.map('stations-map').setView([40.2,-3.7],6);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap contributors'}).addTo(map);
+  let all=[],markers=L.layerGroup().addTo(map),userLocation=null,sortMode='price';
+  const cleanJson=async res=>{if(!res.ok)throw new Error('HTTP '+res.status);const text=(await res.text()).replace(/^\uFEFF/,'');return JSON.parse(text);};
+  const toNum=v=>{const n=Number(String(v??'').replace(',','.'));return Number.isFinite(n)?n:null;};
+  const esc=s=>String(s??'').replace(/[&<>'"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[m]));
+  async function loadProvinces(){try{const data=await cleanJson(await fetch(`${API}/Listados/Provincias/`));const arr=data||[];province.innerHTML='<option value="">Selecciona provincia</option>'+arr.sort((a,b)=>String(a.Provincia).localeCompare(String(b.Provincia),'es')).map(p=>`<option value="${esc(p.IDPovincia||p.IDProvincia)}">${esc(p.Provincia)}</option>`).join('');}catch(e){province.innerHTML='<option value="">No se pudieron cargar</option>';list.innerHTML='<div class="result-box" data-state="error">No se pudo conectar con el servicio de provincias. Inténtalo de nuevo más tarde.</div>';}}
+  province.addEventListener('change',async()=>{municipality.innerHTML='<option value="">Todos los municipios</option>';municipality.disabled=!province.value;if(!province.value)return;try{const data=await cleanJson(await fetch(`${API}/Listados/MunicipiosPorProvincia/${province.value}`));const arr=data||[];municipality.innerHTML='<option value="">Todos los municipios</option>'+arr.sort((a,b)=>String(a.Municipio).localeCompare(String(b.Municipio),'es')).map(m=>`<option value="${esc(m.IDMunicipio)}">${esc(m.Municipio)}</option>`).join('');}catch(e){municipality.innerHTML='<option value="">No se pudieron cargar</option>';}});
+  function hav(a,b){const R=6371,rad=x=>x*Math.PI/180,dlat=rad(b.lat-a.lat),dlon=rad(b.lng-a.lng),q=Math.sin(dlat/2)**2+Math.cos(rad(a.lat))*Math.cos(rad(b.lat))*Math.sin(dlon/2)**2;return 2*R*Math.asin(Math.sqrt(q));}
+  function filtered(){const q=search.value.trim().toLocaleLowerCase('es');let arr=all.filter(s=>!q||`${s['Rótulo']} ${s['Dirección']} ${s['Localidad']} ${s['Municipio']}`.toLocaleLowerCase('es').includes(q));if(sortMode==='distance'&&userLocation)arr.sort((a,b)=>(a._distance??99999)-(b._distance??99999));else arr.sort((a,b)=>a._price-b._price);return arr;}
+  function render(){const arr=filtered();count.textContent=`${arr.length} estaciones`;markers.clearLayers();if(!arr.length){list.innerHTML='<p class="muted">No hay estaciones con precio disponible para ese filtro.</p>';return;}list.innerHTML=arr.slice(0,120).map((s,i)=>{const lat=toNum(s.Latitud),lng=toNum(s['Longitud (WGS84)']),maps=(lat!=null&&lng!=null)?`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`:'#';return `<article class="station-item"><div><div class="station-name"><span class="rank">${i+1}</span>${esc(s['Rótulo']||'Estación')}</div><div class="station-meta">${esc(s['Dirección'])} · ${esc(s['Municipio']||s['Localidad'])}</div><div class="station-meta">${esc(s['Horario']||'Horario no indicado')}${s._distance!=null?` · ${RutaFuel.num(s._distance,1)} km`:''} · <a href="${maps}" target="_blank" rel="noopener">Cómo llegar ↗</a></div></div><div class="station-price"><strong>${RutaFuel.money(s._price,3)}</strong><span>por litro</span></div></article>`;}).join('');
+    const bounds=[];arr.slice(0,120).forEach(s=>{const lat=toNum(s.Latitud),lng=toNum(s['Longitud (WGS84)']);if(lat==null||lng==null)return;bounds.push([lat,lng]);const icon=L.divIcon({className:'leaflet-div-icon',html:`<div class="price-pin">${s._price.toFixed(3)} €</div>`,iconSize:[64,32],iconAnchor:[32,32]});L.marker([lat,lng],{icon}).addTo(markers).bindPopup(`<strong>${esc(s['Rótulo'])}</strong><br>${esc(s['Dirección'])}<br><strong>${RutaFuel.money(s._price,3)}</strong>/L`);});if(bounds.length)map.fitBounds(bounds,{padding:[30,30],maxZoom:13});
+  }
+  async function loadStations(){if(!province.value){list.innerHTML='<div class="result-box" data-state="error">Selecciona una provincia.</div>';return;}list.innerHTML='<p class="muted">Consultando precios…</p>';count.textContent='…';const path=municipality.value?`EstacionesTerrestres/FiltroMunicipio/${municipality.value}`:`EstacionesTerrestres/FiltroProvincia/${province.value}`;try{const data=await cleanJson(await fetch(`${API}/${path}`));const key=fuel.value;all=(data.ListaEESSPrecio||[]).map(s=>({...s,_price:toNum(s[key])})).filter(s=>s._price!=null&&s._price>0);if(userLocation)all.forEach(s=>{const lat=toNum(s.Latitud),lng=toNum(s['Longitud (WGS84)']);s._distance=(lat!=null&&lng!=null)?hav(userLocation,{lat,lng}):null;});dateEl.textContent=`Datos consultados · actualización indicada por la fuente: ${data.Fecha||'sin fecha'}`;sortMode='price';render();}catch(e){all=[];count.textContent='0';list.innerHTML='<div class="result-box" data-state="error">No se pudo consultar el servicio oficial. Comprueba tu conexión e inténtalo de nuevo.</div>';}}
+  document.getElementById('load-stations').addEventListener('click',loadStations);fuel.addEventListener('change',()=>{if(province.value)loadStations();});search.addEventListener('input',render);
+  distBtn.addEventListener('click',()=>{if(!navigator.geolocation){return;}if(userLocation){sortMode=sortMode==='distance'?'price':'distance';distBtn.textContent=sortMode==='distance'?'€ Ordenar por precio':'◎ Ordenar por distancia';render();return;}distBtn.textContent='Obteniendo ubicación…';navigator.geolocation.getCurrentPosition(pos=>{userLocation={lat:pos.coords.latitude,lng:pos.coords.longitude};all.forEach(s=>{const lat=toNum(s.Latitud),lng=toNum(s['Longitud (WGS84)']);s._distance=(lat!=null&&lng!=null)?hav(userLocation,{lat,lng}):null;});sortMode='distance';distBtn.textContent='€ Ordenar por precio';render();},()=>{distBtn.textContent='◎ Ordenar por distancia';},{timeout:8000,maximumAge:60000});});
+  if(navigator.geolocation)distBtn.disabled=false;
+  loadProvinces();
+});
+</script>
+<footer class="site-footer">
+  <div class="footer-grid">
+    <div>
+      <a class="brand" href="/calculadora-combustible/"><span class="brand-mark">R</span><span>RutaFuel<small>herramientas de viaje</small></span></a>
+      <p class="small muted">Calculadoras y utilidades para estimar distancias, consumo y costes. Los resultados son orientativos.</p>
+    </div>
+    <div class="footer-links"><div class="footer-title">Herramientas</div>
+      <a href="/calculadora-combustible/planificador-ruta/">Planificador de ruta</a><a href="/calculadora-combustible/gasolineras/">Precios de gasolineras</a><a href="/calculadora-combustible/calcular-coste-viaje/">Coste de viaje</a><a href="/calculadora-combustible/gasolina-vs-diesel/">Gasolina vs diésel</a>
+    </div>
+    <div class="footer-links"><div class="footer-title">Información</div>
+      <a href="/calculadora-combustible/aviso-legal/">Aviso legal</a><a href="/calculadora-combustible/politica-privacidad/">Privacidad</a><a href="/calculadora-combustible/politica-cookies/">Cookies</a><a href="/calculadora-combustible/contacto/">Contacto</a>
+    </div>
+  </div>
+  <div class="footer-bottom">© RutaFuel · Sin perfiles de usuario ni datos personales publicados · <span id="footer-year">2026</span></div>
+</footer>
+<script src="/calculadora-combustible/assets/app.js" defer></script>
+<script>document.addEventListener('DOMContentLoaded',()=>{const y=document.getElementById('footer-year');if(y)y.textContent=new Date().getFullYear();});</script>
+</body></html>

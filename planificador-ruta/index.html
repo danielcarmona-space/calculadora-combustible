@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Planificador de ruta y coste de viaje | RutaFuel</title>
+  <meta name="description" content="Marca origen y destino en un mapa y calcula distancia por carretera, tiempo, combustible, peajes y coste por persona.">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <meta name="theme-color" content="#2563eb">
+  <meta name="color-scheme" content="light">
+  <link rel="manifest" href="/calculadora-combustible/manifest.webmanifest">
+  <link rel="canonical" href="https://danielcarmona-space.github.io/calculadora-combustible/planificador-ruta/">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="es_ES">
+  <meta property="og:title" content="Planificador de ruta y coste de viaje | RutaFuel">
+  <meta property="og:description" content="Marca origen y destino en un mapa y calcula distancia por carretera, tiempo, combustible, peajes y coste por persona.">
+  <meta property="og:url" content="https://danielcarmona-space.github.io/calculadora-combustible/planificador-ruta/">
+  <meta property="og:site_name" content="RutaFuel">
+  <meta name="twitter:card" content="summary">
+  <link rel="icon" href="/calculadora-combustible/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/calculadora-combustible/assets/styles.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+
+</head><body>
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+<header class="site-header">
+  <div class="nav-shell">
+    <a class="brand" href="/calculadora-combustible/" aria-label="RutaFuel, inicio">
+      <span class="brand-mark">R</span>
+      <span>RutaFuel<small>coste de movilidad</small></span>
+    </a>
+    <button class="nav-toggle" data-nav-toggle type="button" aria-expanded="false" aria-label="Abrir menú">☰</button>
+    <nav class="main-nav" data-main-nav aria-label="Navegación principal"><a href="/calculadora-combustible/">Inicio</a><a href="/calculadora-combustible/planificador-ruta/" aria-current="page">Planificador</a><a href="/calculadora-combustible/gasolineras/">Gasolineras</a><a href="/calculadora-combustible/calcular-coste-viaje/">Coste de viaje</a><a href="/calculadora-combustible/calcular-consumo-coche/">Consumo</a><a href="/calculadora-combustible/calculadora-coche-electrico/">Eléctrico</a></nav>
+  </div>
+</header><main id="contenido">
+  <section class="page-hero"><div class="container"><span class="eyebrow">Mapa interactivo</span><h1>Planifica una ruta y calcula su coste real</h1><p class="lead">Haz clic en el mapa para marcar origen y destino. RutaFuel calcula la distancia por carretera, tiempo estimado, combustible y reparto del gasto.</p></div></section>
+  <section class="section"><div class="container map-layout">
+    <aside class="map-sidebar card">
+      <h2 style="font-size:1.45rem">Datos del viaje</h2>
+      <p class="map-hint">1. Marca dos puntos en el mapa o usa tu ubicación. 2. Ajusta consumo y precio. 3. Calcula.</p>
+      <div class="point-row"><span class="point-badge">A</span><div><strong>Origen</strong><div class="small muted" id="origin-text">Sin seleccionar</div></div></div>
+      <div class="point-row"><span class="point-badge dest">B</span><div><strong>Destino</strong><div class="small muted" id="destination-text">Sin seleccionar</div></div></div>
+      <div class="form-grid" style="margin-top:12px">
+        <label class="field">Consumo (L/100 km)<input id="route-consumption" type="number" min="0" step="0.1" value="6.0"></label>
+        <label class="field">Combustible (€/L)<input id="route-price" type="number" min="0" step="0.001" value="1.60"></label>
+        <label class="field">Peajes (€)<input id="route-tolls" type="number" min="0" step="0.01" value="0"></label>
+        <label class="field">Personas<input id="route-people" type="number" min="1" step="1" value="1"></label>
+      </div>
+      <label class="checkbox"><input id="route-roundtrip" type="checkbox"> Calcular ida y vuelta</label>
+      <div class="form-actions"><button class="button primary" type="button" id="route-calc">Calcular ruta</button><button class="button secondary" type="button" id="route-location">◎ Mi ubicación</button><button class="button danger" type="button" id="route-clear">Limpiar</button></div>
+      <div id="route-result" class="result-box" aria-live="polite">Selecciona origen y destino.</div>
+      <p class="tiny muted">La geolocalización solo se solicita al pulsar «Mi ubicación» y no se almacena en esta web.</p>
+    </aside>
+    <div><div id="route-map" aria-label="Mapa para seleccionar origen y destino"></div><p class="tiny muted" style="margin:10px 2px 0">Mapa © OpenStreetMap · rutas mediante OSRM cuando está disponible.</p></div>
+  </div></section>
+  <section class="section"><div class="container grid grid-3">
+    <article class="card"><h3>¿Cómo se calcula?</h3><p>Litros = kilómetros × consumo ÷ 100. El coste de combustible se suma a los peajes y se divide entre las personas indicadas.</p></article>
+    <article class="card"><h3>Si el routing falla</h3><p>Mostramos una distancia geográfica aproximada y la marcamos como estimación para no presentar un dato como si fuera una ruta real.</p></article>
+    <article class="card"><h3>Resultado orientativo</h3><p>Tráfico, desvíos, conducción, climatología y variaciones del precio pueden cambiar el coste real.</p></article>
+  </div></section>
+</main>
+
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+  const map=L.map('route-map',{zoomControl:true}).setView([40.2,-3.7],6);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap contributors'}).addTo(map);
+  const state={origin:null,destination:null,markers:[],line:null,routeLayer:null};
+  const out=document.getElementById('route-result');
+  const fmtPoint=p=>p?`${p.lat.toFixed(5)}, ${p.lng.toFixed(5)}`:'Sin seleccionar';
+  function refresh(){document.getElementById('origin-text').textContent=fmtPoint(state.origin);document.getElementById('destination-text').textContent=fmtPoint(state.destination);}
+  function marker(p,label,color){return L.marker(p,{title:label}).addTo(map).bindTooltip(label,{permanent:false});}
+  function clearVisual(){state.markers.forEach(m=>map.removeLayer(m));state.markers=[];if(state.line){map.removeLayer(state.line);state.line=null;}if(state.routeLayer){map.removeLayer(state.routeLayer);state.routeLayer=null;}}
+  function rebuild(){clearVisual();if(state.origin)state.markers.push(marker(state.origin,'Origen'));if(state.destination)state.markers.push(marker(state.destination,'Destino'));if(state.origin&&state.destination)state.line=L.polyline([state.origin,state.destination],{dashArray:'7 8',weight:3,opacity:.55}).addTo(map);refresh();}
+  map.on('click',e=>{if(!state.origin){state.origin=e.latlng;}else if(!state.destination){state.destination=e.latlng;}else{state.origin=e.latlng;state.destination=null;}rebuild();});
+  document.getElementById('route-clear').addEventListener('click',()=>{state.origin=null;state.destination=null;clearVisual();refresh();out.dataset.state='';out.textContent='Selecciona origen y destino.';});
+  document.getElementById('route-location').addEventListener('click',()=>{
+    if(!navigator.geolocation){out.dataset.state='error';out.textContent='Tu navegador no ofrece geolocalización.';return;}
+    out.dataset.state='';out.textContent='Solicitando ubicación…';
+    navigator.geolocation.getCurrentPosition(pos=>{state.origin=L.latLng(pos.coords.latitude,pos.coords.longitude);state.destination=null;rebuild();map.setView(state.origin,13);out.textContent='Origen establecido con tu ubicación. Ahora marca un destino.';},()=>{out.dataset.state='error';out.textContent='No se pudo obtener la ubicación. Puedes marcar el origen directamente en el mapa.';},{enableHighAccuracy:false,timeout:8000,maximumAge:60000});
+  });
+  function haversine(a,b){const R=6371,rad=x=>x*Math.PI/180,dlat=rad(b.lat-a.lat),dlon=rad(b.lng-a.lng),s=Math.sin(dlat/2)**2+Math.cos(rad(a.lat))*Math.cos(rad(b.lat))*Math.sin(dlon/2)**2;return 2*R*Math.asin(Math.sqrt(s));}
+  async function fetchRoute(a,b){const url=`https://router.project-osrm.org/route/v1/driving/${a.lng},${a.lat};${b.lng},${b.lat}?overview=full&geometries=geojson`;const res=await fetch(url);if(!res.ok)throw new Error('routing');const data=await res.json();if(data.code!=='Ok'||!data.routes?.[0])throw new Error('routing');return data.routes[0];}
+  document.getElementById('route-calc').addEventListener('click',async()=>{
+    const c=Number(document.getElementById('route-consumption').value),p=Number(document.getElementById('route-price').value),t=Number(document.getElementById('route-tolls').value||0),n=Number(document.getElementById('route-people').value),rt=document.getElementById('route-roundtrip').checked;
+    if(!state.origin||!state.destination){out.dataset.state='error';out.textContent='Marca primero el origen y el destino.';return;}if(!(c>0&&p>=0&&t>=0&&Number.isInteger(n)&&n>=1)){out.dataset.state='error';out.textContent='Revisa consumo, precio, peajes y personas.';return;}
+    out.dataset.state='';out.textContent='Calculando la ruta…';
+    let km,seconds=null,approx=false,geometry=null;
+    try{const route=await fetchRoute(state.origin,state.destination);km=route.distance/1000;seconds=route.duration;geometry=route.geometry;}catch(e){km=haversine(state.origin,state.destination);approx=true;}
+    if(rt){km*=2;if(seconds)seconds*=2;}
+    const liters=km*c/100,fuel=liters*p,total=fuel+t,per=total/n;
+    if(state.routeLayer){map.removeLayer(state.routeLayer);state.routeLayer=null;}
+    if(geometry){state.routeLayer=L.geoJSON(geometry,{style:{weight:5,opacity:.78}}).addTo(map);map.fitBounds(state.routeLayer.getBounds(),{padding:[24,24]});}else if(state.origin&&state.destination){map.fitBounds(L.latLngBounds([state.origin,state.destination]),{padding:[40,40]});}
+    const time=seconds?`${Math.floor(seconds/3600)} h ${Math.round((seconds%3600)/60)} min`:'—';
+    out.dataset.state='success';out.innerHTML=`${approx?'<div class="notice small" style="margin-bottom:12px">El servicio de rutas no respondió. La distancia mostrada es geográfica y puede ser menor que la distancia real por carretera.</div>':''}<div class="metric-grid"><div class="metric"><span class="metric-label">Distancia</span><strong class="metric-value">${RutaFuel.num(km,1)} km</strong></div><div class="metric"><span class="metric-label">Tiempo</span><strong class="metric-value">${time}</strong></div><div class="metric"><span class="metric-label">Combustible</span><strong class="metric-value">${RutaFuel.num(liters,2)} L</strong></div><div class="metric"><span class="metric-label">Total</span><strong class="metric-value">${RutaFuel.money(total)}</strong></div></div><p class="small muted" style="margin:12px 0 0">Combustible: <strong>${RutaFuel.money(fuel)}</strong> · Peajes: <strong>${RutaFuel.money(t)}</strong> · Por persona: <strong>${RutaFuel.money(per)}</strong>${rt?' · Ida y vuelta':''}</p>`;
+  });
+  refresh();
+});
+</script>
+<footer class="site-footer">
+  <div class="footer-grid">
+    <div>
+      <a class="brand" href="/calculadora-combustible/"><span class="brand-mark">R</span><span>RutaFuel<small>herramientas de viaje</small></span></a>
+      <p class="small muted">Calculadoras y utilidades para estimar distancias, consumo y costes. Los resultados son orientativos.</p>
+    </div>
+    <div class="footer-links"><div class="footer-title">Herramientas</div>
+      <a href="/calculadora-combustible/planificador-ruta/">Planificador de ruta</a><a href="/calculadora-combustible/gasolineras/">Precios de gasolineras</a><a href="/calculadora-combustible/calcular-coste-viaje/">Coste de viaje</a><a href="/calculadora-combustible/gasolina-vs-diesel/">Gasolina vs diésel</a>
+    </div>
+    <div class="footer-links"><div class="footer-title">Información</div>
+      <a href="/calculadora-combustible/aviso-legal/">Aviso legal</a><a href="/calculadora-combustible/politica-privacidad/">Privacidad</a><a href="/calculadora-combustible/politica-cookies/">Cookies</a><a href="/calculadora-combustible/contacto/">Contacto</a>
+    </div>
+  </div>
+  <div class="footer-bottom">© RutaFuel · Sin perfiles de usuario ni datos personales publicados · <span id="footer-year">2026</span></div>
+</footer>
+<script src="/calculadora-combustible/assets/app.js" defer></script>
+<script>document.addEventListener('DOMContentLoaded',()=>{const y=document.getElementById('footer-year');if(y)y.textContent=new Date().getFullYear();});</script>
+</body></html>

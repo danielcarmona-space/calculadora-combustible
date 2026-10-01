@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://danielcarmona-space.github.io/calculadora-combustible/</loc></url>
-  <url><loc>https://danielcarmona-space.github.io/calculadora-combustible/calcular-coste-viaje/</loc></url>
-  <url><loc>https://danielcarmona-space.github.io/calculadora-combustible/calcular-consumo-coche/</loc></url>
-  <url><loc>https://danielcarmona-space.github.io/calculadora-combustible/coste-gasolina-por-km/</loc></url>
-  <url><loc>https://danielcarmona-space.github.io/calculadora-combustible/gasolina-vs-diesel/</loc></url>
-  <url><loc>https://danielcarmona-space.github.io/calculadora-combustible/calculadora-coche-electrico/</loc></url>
-  <url><loc>https://danielcarmona-space.github.io/calculadora-combustible/aviso-legal/</loc></url>
-  <url><loc>https://danielcarmona-space.github.io/calculadora-combustible/politica-privacidad/</loc></url>
-  <url><loc>https://danielcarmona-space.github.io/calculadora-combustible/politica-cookies/</loc></url>
-  <url><loc>https://danielcarmona-space.github.io/calculadora-combustible/contacto/</loc></url>
+  <url><loc>https://danielcarmona-space.github.io/calculadora-combustible/</loc><lastmod>2026-10-01</lastmod><changefreq>monthly</changefreq></url>
+  <url><loc>https://danielcarmona-space.github.io/calculadora-combustible/planificador-ruta/</loc><lastmod>2026-10-01</lastmod><changefreq>monthly</changefreq></url>
+  <url><loc>https://danielcarmona-space.github.io/calculadora-combustible/gasolineras/</loc><lastmod>2026-10-01</lastmod><changefreq>weekly</changefreq></url>
+  <url><loc>https://danielcarmona-space.github.io/calculadora-combustible/calcular-coste-viaje/</loc><lastmod>2026-10-01</lastmod><changefreq>monthly</changefreq></url>
+  <url><loc>https://danielcarmona-space.github.io/calculadora-combustible/calcular-consumo-coche/</loc><lastmod>2026-10-01</lastmod><changefreq>monthly</changefreq></url>
+  <url><loc>https://danielcarmona-space.github.io/calculadora-combustible/coste-gasolina-por-km/</loc><lastmod>2026-10-01</lastmod><changefreq>monthly</changefreq></url>
+  <url><loc>https://danielcarmona-space.github.io/calculadora-combustible/gasolina-vs-diesel/</loc><lastmod>2026-10-01</lastmod><changefreq>monthly</changefreq></url>
+  <url><loc>https://danielcarmona-space.github.io/calculadora-combustible/calculadora-coche-electrico/</loc><lastmod>2026-10-01</lastmod><changefreq>monthly</changefreq></url>
+  <url><loc>https://danielcarmona-space.github.io/calculadora-combustible/aviso-legal/</loc><lastmod>2026-10-01</lastmod><changefreq>monthly</changefreq></url>
+  <url><loc>https://danielcarmona-space.github.io/calculadora-combustible/politica-privacidad/</loc><lastmod>2026-10-01</lastmod><changefreq>monthly</changefreq></url>
+  <url><loc>https://danielcarmona-space.github.io/calculadora-combustible/politica-cookies/</loc><lastmod>2026-10-01</lastmod><changefreq>monthly</changefreq></url>
+  <url><loc>https://danielcarmona-space.github.io/calculadora-combustible/contacto/</loc><lastmod>2026-10-01</lastmod><changefreq>monthly</changefreq></url>
 </urlset>

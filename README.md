@@ -1,22 +1,28 @@
-# Calculadora de Combustible — versión corregida
+# RutaFuel
 
-Incluye:
-- 6 calculadoras funcionales.
-- Google Analytics con consentimiento previo para analítica.
-- SEO básico: title, description, canonical, robots y Open Graph.
-- Navegación interna corregida.
-- 4 páginas legales.
-- robots.txt y sitemap.xml con las 10 URLs.
-- Diseño responsive y accesibilidad básica.
+Web estática para GitHub Pages con calculadoras de movilidad, planificador de ruta y consulta de precios de gasolineras.
 
-## Antes de publicar
-Completa en `aviso-legal/index.html`, `politica-privacidad/index.html` y `contacto/index.html`:
-- nombre/denominación del titular
-- NIF/CIF
-- domicilio
-- correo electrónico
+## Incluye
+- Página de inicio moderna y responsive.
+- Planificador con mapa Leaflet/OpenStreetMap y routing OSRM.
+- Geolocalización opcional, sin almacenamiento propio de la ubicación.
+- Precios de gasolineras mediante el servicio público REST de carburantes de España.
+- Calculadoras: coste de viaje, consumo real, coste por km, gasolina vs diésel y coche eléctrico.
+- Google Analytics `G-RGNDGLHEZR` cargado únicamente tras consentimiento.
+- SEO: canonical, Open Graph, sitemap y robots.txt.
+- Páginas de privacidad sin nombres, NIF, domicilio, teléfono o correo personal.
 
-Esta plantilla no sustituye asesoramiento jurídico.
+## Publicación
+Sube el contenido de esta carpeta a la raíz del repositorio `calculadora-combustible` y publica con GitHub Pages.
 
-## AdSense
-No se incluye código de AdSense todavía. Antes de activarlo, revisa la política de consentimiento de Google y configura una CMP adecuada para usuarios del EEE/Reino Unido/Suiza.
+URL prevista: https://danielcarmona-space.github.io/calculadora-combustible/
+
+## Dependencias externas en ejecución
+- Leaflet 1.9.4 desde unpkg (CSS/JS).
+- Teselas de OpenStreetMap.
+- Router público OSRM para rutas.
+- API pública de precios de carburantes de la Administración española.
+- Google Analytics solo si el visitante lo acepta.
+
+## Nota
+Los resultados y precios se muestran con carácter orientativo. Antes de monetizar o convertir el sitio en una actividad sujeta a obligaciones legales adicionales, revisa el aviso legal y adapta la información exigida por la normativa aplicable.

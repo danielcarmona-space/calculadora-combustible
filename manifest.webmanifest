@@ -1,0 +1,14 @@
+{
+  "name": "RutaFuel",
+  "short_name": "RutaFuel",
+  "description": "Calculadoras de rutas, combustible y costes de movilidad.",
+  "lang": "es",
+  "start_url": "/calculadora-combustible/",
+  "scope": "/calculadora-combustible/",
+  "display": "standalone",
+  "background_color": "#f5f7fb",
+  "theme_color": "#2563eb",
+  "icons": [
+    {"src": "/calculadora-combustible/assets/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable"}
+  ]
+}

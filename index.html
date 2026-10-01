@@ -1,143 +1,120 @@
 <!doctype html>
 <html lang="es">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Calculadora de combustible y coste de viaje gratis</title>
-<meta name="description" content="Calcula el coste de un viaje en coche, el combustible necesario y el coste por persona a partir de distancia, consumo y precio del combustible.">
-<meta name="robots" content="index,follow">
-<link rel="canonical" href="https://danielcarmona-space.github.io/calculadora-combustible/">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Calculadora de combustible y coste de viaje gratis">
-<meta property="og:description" content="Calcula el coste de un viaje en coche, el combustible necesario y el coste por persona a partir de distancia, consumo y precio del combustible.">
-<meta property="og:url" content="https://danielcarmona-space.github.io/calculadora-combustible/">
-<meta name="theme-color" content="#075bd3">
-<style>
-:root{--primary:#075bd3;--bg:#f5f7fa;--card:#fff;--text:#222;--muted:#5f6368;--border:#dfe3e8}
-*{box-sizing:border-box}
-body{font-family:Arial,Helvetica,sans-serif;max-width:960px;margin:0 auto;padding:20px;background:var(--bg);color:var(--text);line-height:1.6}
-.card{background:var(--card);padding:25px;border-radius:14px;margin:15px 0;box-shadow:0 2px 10px #0001}
-nav{display:flex;gap:10px;flex-wrap:wrap;margin:15px 0}
-nav a,.links a{color:var(--primary);text-decoration:none}
-nav a:hover,.links a:hover{text-decoration:underline}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:15px}
-label{display:block;font-weight:700}
-input{width:100%;box-sizing:border-box;padding:11px;margin-top:6px;border:1px solid #c9ced6;border-radius:8px;font:inherit;background:#fff}
-input[type=checkbox]{width:auto;margin-right:7px}
-button{padding:12px 18px;border:0;border-radius:8px;background:var(--primary);color:#fff;font-weight:700;cursor:pointer;margin-top:15px;font:inherit}
-button:hover{filter:brightness(.95)}
-.result{font-size:1.08rem;line-height:1.9}
-.muted{color:var(--muted)}
-.links{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
-.links a{display:block;padding:12px;border:1px solid var(--border);border-radius:9px;background:#fafafa}
-h1,h2,h3{line-height:1.25}
-h1{margin-top:0}
-footer{font-size:.9rem;color:var(--muted);padding:10px 0 30px}
-footer nav{margin-top:8px}
-.small{font-size:.92rem}
-.notice{background:#eef5ff;border-left:4px solid var(--primary);padding:12px 15px;border-radius:6px}
-.cookie-banner{position:fixed;left:16px;right:16px;bottom:16px;z-index:9999;background:#fff;border:1px solid var(--border);box-shadow:0 4px 20px #0002;border-radius:12px;padding:16px;max-width:900px;margin:auto}
-.cookie-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
-.cookie-actions button{margin-top:0}
-button.secondary{background:#e9eef5;color:#222}
-@media(max-width:600px){body{padding:12px}.card{padding:18px}}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>RutaFuel | Calcula rutas, combustible y gasolineras</title>
+  <meta name="description" content="Planifica rutas, calcula combustible y costes de viaje y compara precios oficiales de gasolineras en España.">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <meta name="theme-color" content="#2563eb">
+  <meta name="color-scheme" content="light">
+  <link rel="manifest" href="/calculadora-combustible/manifest.webmanifest">
+  <link rel="canonical" href="https://danielcarmona-space.github.io/calculadora-combustible/">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="es_ES">
+  <meta property="og:title" content="RutaFuel | Calcula rutas, combustible y gasolineras">
+  <meta property="og:description" content="Planifica rutas, calcula combustible y costes de viaje y compara precios oficiales de gasolineras en España.">
+  <meta property="og:url" content="https://danielcarmona-space.github.io/calculadora-combustible/">
+  <meta property="og:site_name" content="RutaFuel">
+  <meta name="twitter:card" content="summary">
+  <link rel="icon" href="/calculadora-combustible/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/calculadora-combustible/assets/styles.css">
+
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"RutaFuel","url":"https://danielcarmona-space.github.io/calculadora-combustible/","description":"Calculadoras de combustible, rutas y precios de gasolineras."}</script>
+</head><body>
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+<header class="site-header">
+  <div class="nav-shell">
+    <a class="brand" href="/calculadora-combustible/" aria-label="RutaFuel, inicio">
+      <span class="brand-mark">R</span>
+      <span>RutaFuel<small>coste de movilidad</small></span>
+    </a>
+    <button class="nav-toggle" data-nav-toggle type="button" aria-expanded="false" aria-label="Abrir menú">☰</button>
+    <nav class="main-nav" data-main-nav aria-label="Navegación principal"><a href="/calculadora-combustible/" aria-current="page">Inicio</a><a href="/calculadora-combustible/planificador-ruta/">Planificador</a><a href="/calculadora-combustible/gasolineras/">Gasolineras</a><a href="/calculadora-combustible/calcular-coste-viaje/">Coste de viaje</a><a href="/calculadora-combustible/calcular-consumo-coche/">Consumo</a><a href="/calculadora-combustible/calculadora-coche-electrico/">Eléctrico</a></nav>
+  </div>
+</header><main id="contenido">
+  <section class="hero"><div class="container hero-grid">
+    <div>
+      <span class="eyebrow">● Calcula antes de arrancar</span>
+      <h1>Tu viaje, con los costes claros.</h1>
+      <p class="lead">Planifica una ruta en el mapa, estima combustible, reparte gastos y consulta precios oficiales de gasolineras en España desde una sola web.</p>
+      <div class="hero-actions"><a class="button primary" href="/calculadora-combustible/planificador-ruta/">Planificar una ruta <span aria-hidden="true">→</span></a><a class="button secondary" href="/calculadora-combustible/gasolineras/">Ver precios de gasolineras</a></div>
+      <div class="status-line" style="margin-top:20px"><span class="status-dot"></span> Sin cuenta · Sin perfiles · Cálculos en tu navegador</div>
+    </div>
+    <div class="hero-panel route-mock" aria-hidden="true">
+      <span class="map-dot a"></span><span class="map-dot b"></span>
+      <div class="floating-stat one"><strong>34,12 €</strong><span>coste estimado</span></div>
+      <div class="floating-stat two"><strong>327 km</strong><span>ruta calculada</span></div>
+    </div>
+  </div></section>
+
+  <section class="section"><div class="container">
+    <div class="section-head"><div><div class="kicker">Herramientas principales</div><h2>Todo lo necesario para estimar un trayecto</h2></div><p>Desde un cálculo rápido hasta una ruta real por carretera o la búsqueda de combustible más barato por municipio.</p></div>
+    <div class="grid grid-3">
+      <article class="card feature-card"><div class="icon-box">↗</div><h3>Planificador visual</h3><p>Marca origen y destino en el mapa. Calculamos kilómetros, tiempo, litros, peajes y coste por persona.</p><a href="/calculadora-combustible/planificador-ruta/">Abrir planificador →</a></article>
+      <article class="card feature-card"><div class="icon-box">⛽</div><h3>Gasolineras y precios</h3><p>Compara precios comunicados al servicio oficial por provincia y municipio, con mapa y orden por precio.</p><a href="/calculadora-combustible/gasolineras/">Comparar precios →</a></article>
+      <article class="card feature-card"><div class="icon-box">∑</div><h3>Calculadoras rápidas</h3><p>Consumo real, coste por kilómetro, gasolina frente a diésel y coste de recarga de un coche eléctrico.</p><a href="#calculadoras">Ver calculadoras →</a></article>
+    </div>
+  </div></section>
+
+  <section class="section" id="rapida"><div class="container grid grid-2">
+    <div><div class="kicker">Cálculo rápido</div><h2>¿Cuánto gastarás en combustible?</h2><p class="lead">Introduce cuatro datos y obtén el coste del trayecto sin salir de esta página.</p></div>
+    <div class="card">
+      <div class="form-grid">
+        <label class="field">Distancia (km)<input id="quick-distance" type="number" min="0" step="0.1" inputmode="decimal" placeholder="300"></label>
+        <label class="field">Consumo (L/100 km)<input id="quick-consumption" type="number" min="0" step="0.1" inputmode="decimal" placeholder="6.2"></label>
+        <label class="field">Precio (€/L)<input id="quick-price" type="number" min="0" step="0.001" inputmode="decimal" placeholder="1.62"></label>
+        <label class="field">Personas<input id="quick-people" type="number" min="1" step="1" value="1"></label>
+      </div>
+      <div class="form-actions"><button class="button primary" type="button" id="quick-calc">Calcular</button></div>
+      <div id="quick-result" class="result-box" aria-live="polite">Introduce los datos para ver la estimación.</div>
+    </div>
+  </div></section>
+
+  <section class="section" id="calculadoras"><div class="container">
+    <div class="section-head"><div><div class="kicker">Calculadoras</div><h2>Resuelve una duda concreta</h2></div><p>Herramientas independientes, rápidas y adaptadas a móvil.</p></div>
+    <div class="grid grid-4">
+      <article class="card feature-card"><div class="icon-box">€</div><h3>Coste de viaje</h3><p>Incluye peajes, ida y vuelta y reparto entre pasajeros.</p><a href="/calculadora-combustible/calcular-coste-viaje/">Calcular →</a></article>
+      <article class="card feature-card"><div class="icon-box">L</div><h3>Consumo real</h3><p>Calcula tus litros por 100 km a partir de kilómetros y repostaje.</p><a href="/calculadora-combustible/calcular-consumo-coche/">Calcular →</a></article>
+      <article class="card feature-card"><div class="icon-box">⇄</div><h3>Gasolina vs diésel</h3><p>Compara el coste energético por km de dos vehículos.</p><a href="/calculadora-combustible/gasolina-vs-diesel/">Comparar →</a></article>
+      <article class="card feature-card"><div class="icon-box">⚡</div><h3>Coche eléctrico</h3><p>Estima kWh, coste de carga y coste energético por kilómetro.</p><a href="/calculadora-combustible/calculadora-coche-electrico/">Calcular →</a></article>
+    </div>
+  </div></section>
+
+  <section class="section"><div class="container"><div class="card flat">
+    <div class="grid grid-3">
+      <div><div class="icon-box">✓</div><h3>Privacidad sencilla</h3><p>Las calculadoras no requieren registro. La ubicación del planificador se usa solo en el navegador cuando tú la autorizas.</p></div>
+      <div><div class="icon-box">◎</div><h3>Rutas reales</h3><p>Cuando el servicio de routing está disponible, usamos una ruta por carretera; si falla, mostramos una estimación geográfica claramente indicada.</p></div>
+      <div><div class="icon-box">⛽</div><h3>Fuente oficial</h3><p>Los precios de estaciones se consultan desde el servicio público de carburantes de la Administración española.</p></div>
+    </div>
+  </div></div></section>
+</main>
 
 <script>
-window.dataLayer=window.dataLayer||[];
-function gtag(){dataLayer.push(arguments);}
-gtag('consent','default',{'analytics_storage':'denied','ad_storage':'denied','ad_user_data':'denied','ad_personalization':'denied','wait_for_update':500});
+document.addEventListener('DOMContentLoaded',()=>{
+  document.getElementById('quick-calc').addEventListener('click',()=>{
+    const d=Number(document.getElementById('quick-distance').value), c=Number(document.getElementById('quick-consumption').value), p=Number(document.getElementById('quick-price').value), n=Number(document.getElementById('quick-people').value), out=document.getElementById('quick-result');
+    if(!(d>0&&c>0&&p>=0&&Number.isInteger(n)&&n>=1)){out.dataset.state='error';out.textContent='Revisa distancia, consumo, precio y número de personas.';return;}
+    const liters=d*c/100,total=liters*p; out.dataset.state='success';
+    out.innerHTML=`<div class="metric-grid"><div class="metric"><span class="metric-label">Combustible</span><strong class="metric-value">${RutaFuel.num(liters,2)} L</strong></div><div class="metric"><span class="metric-label">Coste total</span><strong class="metric-value">${RutaFuel.money(total)}</strong></div><div class="metric"><span class="metric-label">Por persona</span><strong class="metric-value">${RutaFuel.money(total/n)}</strong></div><div class="metric"><span class="metric-label">Por 100 km</span><strong class="metric-value">${RutaFuel.money(total/d*100)}</strong></div></div>`;
+  });
+});
 </script>
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-RGNDGLHEZR"></script>
-<script>
-gtag('js',new Date());
-gtag('config','G-RGNDGLHEZR',{'anonymize_ip':true});
-function grantAnalyticsConsent(){
-  localStorage.setItem('analyticsConsent','granted');
-  gtag('consent','update',{'analytics_storage':'granted'});
-  document.getElementById('cookie-banner')?.remove();
-}
-function denyAnalyticsConsent(){
-  localStorage.setItem('analyticsConsent','denied');
-  document.getElementById('cookie-banner')?.remove();
-}
-function setupConsent(){
-  const v=localStorage.getItem('analyticsConsent');
-  if(v==='granted') gtag('consent','update',{'analytics_storage':'granted'});
-  if(v===null){
-    const b=document.createElement('div');
-    b.id='cookie-banner';
-    b.className='cookie-banner';
-    b.innerHTML='<strong>Privacidad y cookies</strong><p class="small">Usamos Google Analytics para conocer de forma agregada cómo se utiliza esta web y mejorarla. Puedes aceptar o rechazar estas cookies de analítica.</p><div class="cookie-actions"><button onclick="grantAnalyticsConsent()">Aceptar analítica</button><button class="secondary" onclick="denyAnalyticsConsent()">Rechazar</button><a href="https://danielcarmona-space.github.io/calculadora-combustible/politica-cookies/">Más información</a></div>';
-    document.body.appendChild(b);
-  }
-document.addEventListener('DOMContentLoaded',setupConsent);
-</script>
-
-</head>
-<body>
-
-<div class="card">
-<h1>Calculadora de combustible y coste de viaje</h1>
-<p>Calcula cuánto combustible necesitas, cuánto cuesta tu viaje y cuánto corresponde pagar a cada pasajero.</p>
-
-<nav aria-label="Navegación principal">
-<a href="https://danielcarmona-space.github.io/calculadora-combustible/">Calculadora</a>
-<a href="https://danielcarmona-space.github.io/calculadora-combustible/calcular-coste-viaje/">Coste de viaje</a>
-<a href="https://danielcarmona-space.github.io/calculadora-combustible/calcular-consumo-coche/">Consumo</a>
-<a href="https://danielcarmona-space.github.io/calculadora-combustible/coste-gasolina-por-km/">Coste por km</a>
-<a href="https://danielcarmona-space.github.io/calculadora-combustible/gasolina-vs-diesel/">Gasolina vs diésel</a>
-<a href="https://danielcarmona-space.github.io/calculadora-combustible/calculadora-coche-electrico/">Coche eléctrico</a>
-</nav>
-
-</div>
-<div class="card">
-<h2>Calculadora rápida</h2>
-<div class="grid">
-<label>Distancia (km)<input id="distance" type="number" min="0" step="0.1" inputmode="decimal"></label>
-<label>Precio combustible (€/L)<input id="price" type="number" min="0" step="0.001" inputmode="decimal"></label>
-<label>Consumo (L/100 km)<input id="consumption" type="number" min="0" step="0.1" inputmode="decimal"></label>
-<label>Personas<input id="people" type="number" min="1" step="1" value="1"></label>
-</div>
-<button type="button" onclick="calculate()">Calcular coste</button>
-<div id="result" class="result" aria-live="polite"></div>
-</div>
-<div class="card">
-<h2>¿Cómo se calcula el coste de combustible?</h2>
-<p>Los litros necesarios se calculan con <strong>distancia × consumo ÷ 100</strong>. Después se multiplican los litros por el precio del combustible.</p>
-<p>Si el viaje se comparte, el coste total se puede dividir entre el número de personas.</p>
-<h2>Ejemplo de cálculo</h2>
-<p>Para 300 km, un consumo de 6 L/100 km y gasolina a 1,60 €/L, se necesitan 18 litros y el combustible cuesta 28,80 €.</p>
-</div>
-<div class="card">
-<h2>Otras calculadoras</h2>
-<div class="links">
-<a href="https://danielcarmona-space.github.io/calculadora-combustible/calcular-coste-viaje/">Calcular el coste completo de un viaje</a>
-<a href="https://danielcarmona-space.github.io/calculadora-combustible/calcular-consumo-coche/">Calcular el consumo real del coche</a>
-<a href="https://danielcarmona-space.github.io/calculadora-combustible/coste-gasolina-por-km/">Calcular el coste de gasolina por km</a>
-<a href="https://danielcarmona-space.github.io/calculadora-combustible/gasolina-vs-diesel/">Comparar gasolina y diésel</a>
-<a href="https://danielcarmona-space.github.io/calculadora-combustible/calculadora-coche-electrico/">Calcular el coste de un coche eléctrico</a>
-</div>
-</div>
-
-
-<footer>
-  <div>Calculadora de combustible y coste de viaje. Resultados orientativos según los datos introducidos.</div>
-  <nav class="small">
-    <a href="https://danielcarmona-space.github.io/calculadora-combustible/aviso-legal/">Aviso legal</a>
-    <a href="https://danielcarmona-space.github.io/calculadora-combustible/politica-privacidad/">Privacidad</a>
-    <a href="https://danielcarmona-space.github.io/calculadora-combustible/politica-cookies/">Cookies</a>
-    <a href="https://danielcarmona-space.github.io/calculadora-combustible/contacto/">Contacto</a>
-  </nav>
+<footer class="site-footer">
+  <div class="footer-grid">
+    <div>
+      <a class="brand" href="/calculadora-combustible/"><span class="brand-mark">R</span><span>RutaFuel<small>herramientas de viaje</small></span></a>
+      <p class="small muted">Calculadoras y utilidades para estimar distancias, consumo y costes. Los resultados son orientativos.</p>
+    </div>
+    <div class="footer-links"><div class="footer-title">Herramientas</div>
+      <a href="/calculadora-combustible/planificador-ruta/">Planificador de ruta</a><a href="/calculadora-combustible/gasolineras/">Precios de gasolineras</a><a href="/calculadora-combustible/calcular-coste-viaje/">Coste de viaje</a><a href="/calculadora-combustible/gasolina-vs-diesel/">Gasolina vs diésel</a>
+    </div>
+    <div class="footer-links"><div class="footer-title">Información</div>
+      <a href="/calculadora-combustible/aviso-legal/">Aviso legal</a><a href="/calculadora-combustible/politica-privacidad/">Privacidad</a><a href="/calculadora-combustible/politica-cookies/">Cookies</a><a href="/calculadora-combustible/contacto/">Contacto</a>
+    </div>
+  </div>
+  <div class="footer-bottom">© RutaFuel · Sin perfiles de usuario ni datos personales publicados · <span id="footer-year">2026</span></div>
 </footer>
-
-<script>
-function calculate(){
- const d=+document.getElementById('distance').value,p=+document.getElementById('price').value,c=+document.getElementById('consumption').value,n=+document.getElementById('people').value,r=document.getElementById('result');
- if(!(d>0&&p>=0&&c>0&&n>=1)){r.textContent='Introduce distancia, precio, consumo y al menos una persona con valores válidos.';return}
- const liters=d*c/100,total=liters*p;
- r.innerHTML='<b>Combustible:</b> '+liters.toFixed(2)+' L<br><b>Coste total:</b> '+total.toFixed(2)+' €<br><b>Coste por persona:</b> '+(total/n).toFixed(2)+' €<br><b>Coste de combustible por 100 km:</b> '+(total/d*100).toFixed(2)+' €';
-}
-</script>
-</body>
-</html>
+<script src="/calculadora-combustible/assets/app.js" defer></script>
+<script>document.addEventListener('DOMContentLoaded',()=>{const y=document.getElementById('footer-year');if(y)y.textContent=new Date().getFullYear();});</script>
+</body></html>
