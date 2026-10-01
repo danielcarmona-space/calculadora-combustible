@@ -26,3 +26,9 @@ URL prevista: https://danielcarmona-space.github.io/calculadora-combustible/
 
 ## Nota
 Los resultados y precios se muestran con carácter orientativo. Antes de monetizar o convertir el sitio en una actividad sujeta a obligaciones legales adicionales, revisa el aviso legal y adapta la información exigida por la normativa aplicable.
+
+
+## V2.1
+- Búsqueda de gasolineras marcando un punto en el mapa y aplicando un radio de 2–50 km.
+- Gasolineras cercanas al trazado del planificador, con radio configurable y precios oficiales.
+- Las coordenadas elegidas o geolocalizadas se procesan solo en el navegador y no se guardan en una base de datos de RutaFuel.

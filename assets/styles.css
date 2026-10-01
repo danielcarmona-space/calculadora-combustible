@@ -161,3 +161,15 @@ h3 { font-size: 1.1rem; margin: 0 0 8px; }
   .station-item { grid-template-columns: 1fr; }.station-price { text-align: left; }
   .footer-grid { padding: 28px 14px; }.footer-bottom { padding: 14px 14px 24px; }
 }
+
+/* V2.1: búsquedas geográficas y gasolineras en ruta */
+.zone-search-panel { margin-top: 16px; padding: 15px; border: 1px solid #dbe7ff; background: linear-gradient(135deg,#f8fbff,#f3f7ff); border-radius: 16px; display: grid; grid-template-columns: minmax(220px,1fr) 120px auto; gap: 14px; align-items: end; }
+.zone-search-panel p { margin: 5px 0 0; }
+.zone-actions { margin: 0; align-self: end; }
+.zone-radius select { min-width: 110px; }
+.route-stations-controls { margin-top: 16px; padding-top: 15px; border-top: 1px solid var(--line); }
+.route-stations-controls .form-grid { margin: 8px 0 10px; }
+.route-stations-card { margin-top: 14px; max-height: 420px; overflow: auto; }
+.route-price-pin { border-color: #0f766e; box-shadow: 0 5px 15px rgba(15,118,110,.22); }
+@media (max-width: 980px) { .zone-search-panel { grid-template-columns: 1fr 140px; }.zone-actions { grid-column: 1 / -1; } }
+@media (max-width: 640px) { .zone-search-panel { grid-template-columns: 1fr; }.zone-actions { grid-column: auto; }.route-stations-card { max-height: none; } }

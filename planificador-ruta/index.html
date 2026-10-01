@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <title>Planificador de ruta y coste de viaje | RutaFuel</title>
-  <meta name="description" content="Marca origen y destino en un mapa y calcula distancia por carretera, tiempo, combustible, peajes y coste por persona.">
+  <meta name="description" content="Marca origen y destino, calcula el coste del viaje y descubre gasolineras con precios oficiales cerca del recorrido.">
   <meta name="robots" content="index,follow,max-image-preview:large">
   <meta name="theme-color" content="#2563eb">
   <meta name="color-scheme" content="light">
@@ -13,7 +13,7 @@
   <meta property="og:type" content="website">
   <meta property="og:locale" content="es_ES">
   <meta property="og:title" content="Planificador de ruta y coste de viaje | RutaFuel">
-  <meta property="og:description" content="Marca origen y destino en un mapa y calcula distancia por carretera, tiempo, combustible, peajes y coste por persona.">
+  <meta property="og:description" content="Marca origen y destino, calcula el coste del viaje y descubre gasolineras con precios oficiales cerca del recorrido.">
   <meta property="og:url" content="https://danielcarmona-space.github.io/calculadora-combustible/planificador-ruta/">
   <meta property="og:site_name" content="RutaFuel">
   <meta name="twitter:card" content="summary">
@@ -33,7 +33,7 @@
     <nav class="main-nav" data-main-nav aria-label="Navegación principal"><a href="/calculadora-combustible/">Inicio</a><a href="/calculadora-combustible/planificador-ruta/" aria-current="page">Planificador</a><a href="/calculadora-combustible/gasolineras/">Gasolineras</a><a href="/calculadora-combustible/calcular-coste-viaje/">Coste de viaje</a><a href="/calculadora-combustible/calcular-consumo-coche/">Consumo</a><a href="/calculadora-combustible/calculadora-coche-electrico/">Eléctrico</a></nav>
   </div>
 </header><main id="contenido">
-  <section class="page-hero"><div class="container"><span class="eyebrow">Mapa interactivo</span><h1>Planifica una ruta y calcula su coste real</h1><p class="lead">Haz clic en el mapa para marcar origen y destino. RutaFuel calcula la distancia por carretera, tiempo estimado, combustible y reparto del gasto.</p></div></section>
+  <section class="page-hero"><div class="container"><span class="eyebrow">Mapa interactivo</span><h1>Planifica una ruta y calcula su coste real</h1><p class="lead">Haz clic en el mapa para marcar origen y destino. RutaFuel calcula distancia, tiempo y coste, y localiza gasolineras cercanas al trazado.</p></div></section>
   <section class="section"><div class="container map-layout">
     <aside class="map-sidebar card">
       <h2 style="font-size:1.45rem">Datos del viaje</h2>
@@ -49,9 +49,17 @@
       <label class="checkbox"><input id="route-roundtrip" type="checkbox"> Calcular ida y vuelta</label>
       <div class="form-actions"><button class="button primary" type="button" id="route-calc">Calcular ruta</button><button class="button secondary" type="button" id="route-location">◎ Mi ubicación</button><button class="button danger" type="button" id="route-clear">Limpiar</button></div>
       <div id="route-result" class="result-box" aria-live="polite">Selecciona origen y destino.</div>
+      <div class="route-stations-controls">
+        <div class="kicker">Gasolineras en ruta</div>
+        <div class="form-grid">
+          <label class="field">Combustible<select id="route-station-fuel"><option value="Precio Gasolina 95 E5">Gasolina 95 E5</option><option value="Precio Gasoleo A">Gasóleo A</option><option value="Precio Gasolina 98 E5">Gasolina 98 E5</option><option value="Precio Gasoleo Premium">Gasóleo Premium</option><option value="Precio Gases licuados del petróleo">GLP</option></select></label>
+          <label class="field">Máx. desde la ruta<select id="route-station-radius"><option value="2">2 km</option><option value="5" selected>5 km</option><option value="10">10 km</option><option value="20">20 km</option></select></label>
+        </div>
+        <button class="button secondary" id="refresh-route-stations" type="button" disabled>⛽ Actualizar gasolineras</button>
+      </div>
       <p class="tiny muted">La geolocalización solo se solicita al pulsar «Mi ubicación» y no se almacena en esta web.</p>
     </aside>
-    <div><div id="route-map" aria-label="Mapa para seleccionar origen y destino"></div><p class="tiny muted" style="margin:10px 2px 0">Mapa © OpenStreetMap · rutas mediante OSRM cuando está disponible.</p></div>
+    <div><div id="route-map" aria-label="Mapa para seleccionar origen y destino"></div><p class="tiny muted" style="margin:10px 2px 0">Mapa © OpenStreetMap · rutas mediante OSRM cuando está disponible.</p><div class="card route-stations-card"><div style="display:flex;justify-content:space-between;gap:12px;align-items:end"><div><div class="kicker">Cerca del recorrido</div><h2 style="font-size:1.35rem;margin-top:4px">Gasolineras en ruta</h2></div><strong id="route-station-count" class="muted">0</strong></div><div id="route-station-list" class="station-list"><p class="muted">Calcula una ruta para ver estaciones próximas al recorrido.</p></div></div></div>
   </div></section>
   <section class="section"><div class="container grid grid-3">
     <article class="card"><h3>¿Cómo se calcula?</h3><p>Litros = kilómetros × consumo ÷ 100. El coste de combustible se suma a los peajes y se divide entre las personas indicadas.</p></article>
@@ -62,37 +70,37 @@
 
 <script>
 document.addEventListener('DOMContentLoaded',()=>{
+  const API='https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes';
   const map=L.map('route-map',{zoomControl:true}).setView([40.2,-3.7],6);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap contributors'}).addTo(map);
-  const state={origin:null,destination:null,markers:[],line:null,routeLayer:null};
-  const out=document.getElementById('route-result');
+  const state={origin:null,destination:null,markers:[],line:null,routeLayer:null,routeGeometry:null,stationData:null};
+  const stationLayer=L.layerGroup().addTo(map),out=document.getElementById('route-result'),stationList=document.getElementById('route-station-list'),stationCount=document.getElementById('route-station-count'),refreshStations=document.getElementById('refresh-route-stations');
   const fmtPoint=p=>p?`${p.lat.toFixed(5)}, ${p.lng.toFixed(5)}`:'Sin seleccionar';
+  const toNum=v=>{const n=Number(String(v??'').replace(',','.'));return Number.isFinite(n)?n:null;};
+  const esc=s=>String(s??'').replace(/[&<>'"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[m]));
+  const cleanJson=async res=>{if(!res.ok)throw new Error('HTTP '+res.status);const text=(await res.text()).replace(/^\uFEFF/,'');return JSON.parse(text);};
   function refresh(){document.getElementById('origin-text').textContent=fmtPoint(state.origin);document.getElementById('destination-text').textContent=fmtPoint(state.destination);}
-  function marker(p,label,color){return L.marker(p,{title:label}).addTo(map).bindTooltip(label,{permanent:false});}
-  function clearVisual(){state.markers.forEach(m=>map.removeLayer(m));state.markers=[];if(state.line){map.removeLayer(state.line);state.line=null;}if(state.routeLayer){map.removeLayer(state.routeLayer);state.routeLayer=null;}}
-  function rebuild(){clearVisual();if(state.origin)state.markers.push(marker(state.origin,'Origen'));if(state.destination)state.markers.push(marker(state.destination,'Destino'));if(state.origin&&state.destination)state.line=L.polyline([state.origin,state.destination],{dashArray:'7 8',weight:3,opacity:.55}).addTo(map);refresh();}
+  function marker(p,label){return L.marker(p,{title:label}).addTo(map).bindTooltip(label,{permanent:false});}
+  function clearRouteVisual(){state.markers.forEach(m=>map.removeLayer(m));state.markers=[];if(state.line){map.removeLayer(state.line);state.line=null;}if(state.routeLayer){map.removeLayer(state.routeLayer);state.routeLayer=null;}}
+  function clearStations(){stationLayer.clearLayers();stationCount.textContent='0';stationList.innerHTML='<p class="muted">Calcula una ruta para ver estaciones próximas al recorrido.</p>';refreshStations.disabled=true;}
+  function rebuild(){clearRouteVisual();clearStations();state.routeGeometry=null;if(state.origin)state.markers.push(marker(state.origin,'Origen'));if(state.destination)state.markers.push(marker(state.destination,'Destino'));if(state.origin&&state.destination)state.line=L.polyline([state.origin,state.destination],{dashArray:'7 8',weight:3,opacity:.55}).addTo(map);refresh();}
   map.on('click',e=>{if(!state.origin){state.origin=e.latlng;}else if(!state.destination){state.destination=e.latlng;}else{state.origin=e.latlng;state.destination=null;}rebuild();});
-  document.getElementById('route-clear').addEventListener('click',()=>{state.origin=null;state.destination=null;clearVisual();refresh();out.dataset.state='';out.textContent='Selecciona origen y destino.';});
-  document.getElementById('route-location').addEventListener('click',()=>{
-    if(!navigator.geolocation){out.dataset.state='error';out.textContent='Tu navegador no ofrece geolocalización.';return;}
-    out.dataset.state='';out.textContent='Solicitando ubicación…';
-    navigator.geolocation.getCurrentPosition(pos=>{state.origin=L.latLng(pos.coords.latitude,pos.coords.longitude);state.destination=null;rebuild();map.setView(state.origin,13);out.textContent='Origen establecido con tu ubicación. Ahora marca un destino.';},()=>{out.dataset.state='error';out.textContent='No se pudo obtener la ubicación. Puedes marcar el origen directamente en el mapa.';},{enableHighAccuracy:false,timeout:8000,maximumAge:60000});
-  });
+  document.getElementById('route-clear').addEventListener('click',()=>{state.origin=null;state.destination=null;clearRouteVisual();clearStations();state.routeGeometry=null;refresh();out.dataset.state='';out.textContent='Selecciona origen y destino.';});
+  document.getElementById('route-location').addEventListener('click',()=>{if(!navigator.geolocation){out.dataset.state='error';out.textContent='Tu navegador no ofrece geolocalización.';return;}out.dataset.state='';out.textContent='Solicitando ubicación…';navigator.geolocation.getCurrentPosition(pos=>{state.origin=L.latLng(pos.coords.latitude,pos.coords.longitude);state.destination=null;rebuild();map.setView(state.origin,13);out.textContent='Origen establecido con tu ubicación. Ahora marca un destino.';},()=>{out.dataset.state='error';out.textContent='No se pudo obtener la ubicación. Puedes marcar el origen directamente en el mapa.';},{enableHighAccuracy:false,timeout:8000,maximumAge:60000});});
   function haversine(a,b){const R=6371,rad=x=>x*Math.PI/180,dlat=rad(b.lat-a.lat),dlon=rad(b.lng-a.lng),s=Math.sin(dlat/2)**2+Math.cos(rad(a.lat))*Math.cos(rad(b.lat))*Math.sin(dlon/2)**2;return 2*R*Math.asin(Math.sqrt(s));}
   async function fetchRoute(a,b){const url=`https://router.project-osrm.org/route/v1/driving/${a.lng},${a.lat};${b.lng},${b.lat}?overview=full&geometries=geojson`;const res=await fetch(url);if(!res.ok)throw new Error('routing');const data=await res.json();if(data.code!=='Ok'||!data.routes?.[0])throw new Error('routing');return data.routes[0];}
-  document.getElementById('route-calc').addEventListener('click',async()=>{
-    const c=Number(document.getElementById('route-consumption').value),p=Number(document.getElementById('route-price').value),t=Number(document.getElementById('route-tolls').value||0),n=Number(document.getElementById('route-people').value),rt=document.getElementById('route-roundtrip').checked;
-    if(!state.origin||!state.destination){out.dataset.state='error';out.textContent='Marca primero el origen y el destino.';return;}if(!(c>0&&p>=0&&t>=0&&Number.isInteger(n)&&n>=1)){out.dataset.state='error';out.textContent='Revisa consumo, precio, peajes y personas.';return;}
-    out.dataset.state='';out.textContent='Calculando la ruta…';
-    let km,seconds=null,approx=false,geometry=null;
-    try{const route=await fetchRoute(state.origin,state.destination);km=route.distance/1000;seconds=route.duration;geometry=route.geometry;}catch(e){km=haversine(state.origin,state.destination);approx=true;}
-    if(rt){km*=2;if(seconds)seconds*=2;}
-    const liters=km*c/100,fuel=liters*p,total=fuel+t,per=total/n;
-    if(state.routeLayer){map.removeLayer(state.routeLayer);state.routeLayer=null;}
-    if(geometry){state.routeLayer=L.geoJSON(geometry,{style:{weight:5,opacity:.78}}).addTo(map);map.fitBounds(state.routeLayer.getBounds(),{padding:[24,24]});}else if(state.origin&&state.destination){map.fitBounds(L.latLngBounds([state.origin,state.destination]),{padding:[40,40]});}
-    const time=seconds?`${Math.floor(seconds/3600)} h ${Math.round((seconds%3600)/60)} min`:'—';
-    out.dataset.state='success';out.innerHTML=`${approx?'<div class="notice small" style="margin-bottom:12px">El servicio de rutas no respondió. La distancia mostrada es geográfica y puede ser menor que la distancia real por carretera.</div>':''}<div class="metric-grid"><div class="metric"><span class="metric-label">Distancia</span><strong class="metric-value">${RutaFuel.num(km,1)} km</strong></div><div class="metric"><span class="metric-label">Tiempo</span><strong class="metric-value">${time}</strong></div><div class="metric"><span class="metric-label">Combustible</span><strong class="metric-value">${RutaFuel.num(liters,2)} L</strong></div><div class="metric"><span class="metric-label">Total</span><strong class="metric-value">${RutaFuel.money(total)}</strong></div></div><p class="small muted" style="margin:12px 0 0">Combustible: <strong>${RutaFuel.money(fuel)}</strong> · Peajes: <strong>${RutaFuel.money(t)}</strong> · Por persona: <strong>${RutaFuel.money(per)}</strong>${rt?' · Ida y vuelta':''}</p>`;
-  });
+  function simplifyCoords(coords,maxPoints=1200){if(coords.length<=maxPoints)return coords;const step=Math.ceil(coords.length/maxPoints),out=[];for(let i=0;i<coords.length;i+=step)out.push(coords[i]);const last=coords[coords.length-1];if(out[out.length-1]!==last)out.push(last);return out;}
+  function pointSegmentKm(p,a,b){const lat0=(p.lat+a.lat+b.lat)/3*Math.PI/180,kx=111.320*Math.cos(lat0),ky=110.574,px=p.lng*kx,py=p.lat*ky,ax=a.lng*kx,ay=a.lat*ky,bx=b.lng*kx,by=b.lat*ky,dx=bx-ax,dy=by-ay;const den=dx*dx+dy*dy;if(!den)return Math.hypot(px-ax,py-ay);let t=((px-ax)*dx+(py-ay)*dy)/den;t=Math.max(0,Math.min(1,t));return Math.hypot(px-(ax+t*dx),py-(ay+t*dy));}
+  function routeDistanceKm(p,coords){let best=Infinity;for(let i=1;i<coords.length;i++){const d=pointSegmentKm(p,coords[i-1],coords[i]);if(d<best)best=d;}return best;}
+  async function loadNationalStations(){if(state.stationData)return state.stationData;state.stationData=await cleanJson(await fetch(`${API}/EstacionesTerrestres/`));return state.stationData;}
+  async function showRouteStations(){if(!state.routeGeometry){stationList.innerHTML='<p class="muted">Primero calcula una ruta por carretera.</p>';return;}const radius=Number(document.getElementById('route-station-radius').value),key=document.getElementById('route-station-fuel').value;refreshStations.disabled=true;refreshStations.textContent='Buscando…';stationList.innerHTML='<p class="muted">Consultando precios oficiales y comparando con el trazado…</p>';stationLayer.clearLayers();try{const data=await loadNationalStations();const raw=state.routeGeometry.coordinates.map(([lng,lat])=>({lat,lng})),coords=simplifyCoords(raw),lats=coords.map(p=>p.lat),lngs=coords.map(p=>p.lng),padLat=radius/110.574,padLng=radius/(111.320*Math.max(.25,Math.cos(((Math.min(...lats)+Math.max(...lats))/2)*Math.PI/180))),minLat=Math.min(...lats)-padLat,maxLat=Math.max(...lats)+padLat,minLng=Math.min(...lngs)-padLng,maxLng=Math.max(...lngs)+padLng;
+      const stations=(data.ListaEESSPrecio||[]).map(s=>{const lat=toNum(s.Latitud),lng=toNum(s['Longitud (WGS84)']),price=toNum(s[key]);if(lat==null||lng==null||price==null||price<=0||lat<minLat||lat>maxLat||lng<minLng||lng>maxLng)return null;const d=routeDistanceKm({lat,lng},coords);return d<=radius?{...s,_lat:lat,_lng:lng,_price:price,_routeDistance:d}:null;}).filter(Boolean).sort((a,b)=>a._routeDistance-b._routeDistance||a._price-b._price);
+      stationCount.textContent=`${stations.length} estaciones`;if(!stations.length){stationList.innerHTML=`<p class="muted">No se encontraron estaciones a menos de ${radius} km de esta ruta con precio disponible.</p>`;return;}
+      const shown=stations.slice(0,40);stationList.innerHTML=shown.map((s,i)=>{const maps=`https://www.google.com/maps/dir/?api=1&destination=${s._lat},${s._lng}`;return `<article class="station-item"><div><div class="station-name"><span class="rank">${i+1}</span>${esc(s['Rótulo']||'Estación')}</div><div class="station-meta">${esc(s['Dirección'])} · ${esc(s['Municipio']||s['Localidad'])}</div><div class="station-meta"><strong>${RutaFuel.num(s._routeDistance,1)} km de la ruta (aprox.)</strong> · <a href="${maps}" target="_blank" rel="noopener">Cómo llegar ↗</a></div></div><div class="station-price"><strong>${RutaFuel.money(s._price,3)}</strong><span>por litro</span></div></article>`;}).join('');
+      shown.forEach(s=>{const icon=L.divIcon({className:'leaflet-div-icon',html:`<div class="price-pin route-price-pin">${s._price.toFixed(3)} €</div>`,iconSize:[64,32],iconAnchor:[32,32]});L.marker([s._lat,s._lng],{icon}).addTo(stationLayer).bindPopup(`<strong>${esc(s['Rótulo'])}</strong><br>${esc(s['Dirección'])}<br><strong>${RutaFuel.money(s._price,3)}</strong>/L<br>${RutaFuel.num(s._routeDistance,1)} km de la ruta (aprox.)`);});
+    }catch(e){stationCount.textContent='0';stationList.innerHTML='<div class="result-box" data-state="error">No se pudieron cargar las gasolineras de la ruta. El cálculo del viaje sigue siendo válido.</div>';}finally{refreshStations.disabled=false;refreshStations.textContent='⛽ Actualizar gasolineras';}}
+  refreshStations.addEventListener('click',showRouteStations);document.getElementById('route-station-fuel').addEventListener('change',()=>{if(state.routeGeometry)showRouteStations();});document.getElementById('route-station-radius').addEventListener('change',()=>{if(state.routeGeometry)showRouteStations();});
+  document.getElementById('route-calc').addEventListener('click',async()=>{const c=Number(document.getElementById('route-consumption').value),p=Number(document.getElementById('route-price').value),t=Number(document.getElementById('route-tolls').value||0),n=Number(document.getElementById('route-people').value),rt=document.getElementById('route-roundtrip').checked;if(!state.origin||!state.destination){out.dataset.state='error';out.textContent='Marca primero el origen y el destino.';return;}if(!(c>0&&p>=0&&t>=0&&Number.isInteger(n)&&n>=1)){out.dataset.state='error';out.textContent='Revisa consumo, precio, peajes y personas.';return;}out.dataset.state='';out.textContent='Calculando la ruta…';stationLayer.clearLayers();stationList.innerHTML='<p class="muted">Esperando al trazado de la ruta…</p>';stationCount.textContent='0';let km,seconds=null,approx=false,geometry=null;try{const route=await fetchRoute(state.origin,state.destination);km=route.distance/1000;seconds=route.duration;geometry=route.geometry;}catch(e){km=haversine(state.origin,state.destination);approx=true;}if(rt){km*=2;if(seconds)seconds*=2;}const liters=km*c/100,fuelCost=liters*p,total=fuelCost+t,per=total/n;if(state.routeLayer){map.removeLayer(state.routeLayer);state.routeLayer=null;}if(geometry){state.routeGeometry=geometry;state.routeLayer=L.geoJSON(geometry,{style:{weight:5,opacity:.78}}).addTo(map);map.fitBounds(state.routeLayer.getBounds(),{padding:[24,24]});refreshStations.disabled=false;}else{state.routeGeometry=null;clearStations();if(state.origin&&state.destination)map.fitBounds(L.latLngBounds([state.origin,state.destination]),{padding:[40,40]});}const time=seconds?`${Math.floor(seconds/3600)} h ${Math.round((seconds%3600)/60)} min`:'—';out.dataset.state='success';out.innerHTML=`${approx?'<div class="notice small" style="margin-bottom:12px">El servicio de rutas no respondió. La distancia mostrada es geográfica y no podemos buscar gasolineras junto a un trazado real.</div>':''}<div class="metric-grid"><div class="metric"><span class="metric-label">Distancia</span><strong class="metric-value">${RutaFuel.num(km,1)} km</strong></div><div class="metric"><span class="metric-label">Tiempo</span><strong class="metric-value">${time}</strong></div><div class="metric"><span class="metric-label">Combustible</span><strong class="metric-value">${RutaFuel.num(liters,2)} L</strong></div><div class="metric"><span class="metric-label">Total</span><strong class="metric-value">${RutaFuel.money(total)}</strong></div></div><p class="small muted" style="margin:12px 0 0">Combustible: <strong>${RutaFuel.money(fuelCost)}</strong> · Peajes: <strong>${RutaFuel.money(t)}</strong> · Por persona: <strong>${RutaFuel.money(per)}</strong>${rt?' · Ida y vuelta':''}</p>`;if(geometry)showRouteStations();});
   refresh();
 });
 </script>
