@@ -32,3 +32,10 @@ Los resultados y precios se muestran con carácter orientativo. Antes de monetiz
 - Búsqueda de gasolineras marcando un punto en el mapa y aplicando un radio de 2–50 km.
 - Gasolineras cercanas al trazado del planificador, con radio configurable y precios oficiales.
 - Las coordenadas elegidas o geolocalizadas se procesan solo en el navegador y no se guardan en una base de datos de RutaFuel.
+
+
+## V2.2
+- Scroll independiente para la lista de gasolineras del planificador.
+- Orden por precio o cercanía a la ruta.
+- Filtro dinámico por marca en gasolineras de ruta.
+- Separación visual clara entre búsqueda por provincia/municipio y búsqueda por punto/radio.

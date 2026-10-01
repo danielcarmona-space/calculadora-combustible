@@ -35,28 +35,34 @@
 </header><main id="contenido">
   <section class="page-hero"><div class="container"><span class="eyebrow">Datos oficiales de carburantes</span><h1>Compara gasolineras y encuentra el mejor precio de tu zona</h1><p class="lead">Busca por provincia o marca cualquier punto del mapa para encontrar las gasolineras que están dentro del radio que elijas.</p></div></section>
   <section class="section"><div class="container">
-    <div class="card" style="margin-bottom:18px">
-      <div class="station-toolbar">
-        <label class="field">Provincia<select id="province"><option value="">Cargando provincias…</option></select></label>
-        <label class="field">Municipio<select id="municipality" disabled><option value="">Todos los municipios</option></select></label>
-        <label class="field">Combustible<select id="fuel"><option value="Precio Gasolina 95 E5">Gasolina 95 E5</option><option value="Precio Gasoleo A">Gasóleo A</option><option value="Precio Gasolina 98 E5">Gasolina 98 E5</option><option value="Precio Gasoleo Premium">Gasóleo Premium</option><option value="Precio Gases licuados del petróleo">GLP</option></select></label>
-        <label class="field">Buscar estación<input id="station-search" type="search" placeholder="Marca, calle, localidad"></label>
+    <div class="card station-search-shell" style="margin-bottom:18px">
+      <div class="search-mode-heading"><div><span class="eyebrow">Elige cómo buscar</span><h2>Dos formas de encontrar gasolineras</h2></div><p class="small muted">Puedes buscar por zona administrativa o marcar directamente un punto y definir un radio.</p></div>
+      <div class="search-mode-grid">
+        <section class="search-mode-card">
+          <div class="search-mode-label"><span class="search-mode-number">1</span><div><div class="kicker">Por provincia y municipio</div><strong>Busca una zona concreta</strong></div></div>
+          <div class="station-toolbar station-toolbar-compact">
+            <label class="field">Provincia<select id="province"><option value="">Cargando provincias…</option></select></label>
+            <label class="field">Municipio<select id="municipality" disabled><option value="">Todos los municipios</option></select></label>
+            <label class="field">Combustible<select id="fuel"><option value="Precio Gasolina 95 E5">Gasolina 95 E5</option><option value="Precio Gasoleo A">Gasóleo A</option><option value="Precio Gasolina 98 E5">Gasolina 98 E5</option><option value="Precio Gasoleo Premium">Gasóleo Premium</option><option value="Precio Gases licuados del petróleo">GLP</option></select></label>
+            <label class="field">Buscar estación<input id="station-search" type="search" placeholder="Marca, calle, localidad"></label>
+          </div>
+          <div class="form-actions"><button class="button primary" id="load-stations" type="button">Buscar por provincia</button><button class="button secondary" id="sort-distance" type="button" disabled>◎ Ordenar por distancia</button></div>
+        </section>
+        <section class="search-mode-card search-mode-card-radius">
+          <div class="search-mode-label"><span class="search-mode-number">2</span><div><div class="kicker">Por punto y radio</div><strong>Marca cualquier lugar en el mapa</strong></div></div>
+          <p class="small muted search-mode-copy">Haz clic en el mapa o usa tu ubicación. Después elige cuántos kilómetros alrededor quieres explorar.</p>
+          <div class="zone-search-panel">
+            <div><strong>Centro de búsqueda</strong><p class="small muted" id="zone-point-text">Todavía no has marcado ningún punto.</p></div>
+            <label class="field zone-radius">Radio<select id="zone-radius"><option value="2">2 km</option><option value="5" selected>5 km</option><option value="10">10 km</option><option value="20">20 km</option><option value="50">50 km</option></select></label>
+            <div class="form-actions zone-actions"><button class="button primary" id="search-radius" type="button" disabled>Buscar en este radio</button><button class="button secondary" id="zone-location" type="button">◎ Usar mi ubicación</button></div>
+          </div>
+        </section>
       </div>
-      <div class="form-actions"><button class="button primary" id="load-stations" type="button">Buscar por provincia</button><button class="button secondary" id="sort-distance" type="button" disabled>◎ Ordenar por distancia</button></div>
-      <div class="zone-search-panel">
-        <div>
-          <div class="kicker">Búsqueda por radio</div>
-          <strong>Haz clic en el mapa para elegir el centro</strong>
-          <p class="small muted" id="zone-point-text">Todavía no has marcado ningún punto.</p>
-        </div>
-        <label class="field zone-radius">Radio<select id="zone-radius"><option value="2">2 km</option><option value="5" selected>5 km</option><option value="10">10 km</option><option value="20">20 km</option><option value="50">50 km</option></select></label>
-        <div class="form-actions zone-actions"><button class="button primary" id="search-radius" type="button" disabled>Buscar en este radio</button><button class="button secondary" id="zone-location" type="button">◎ Usar mi ubicación</button></div>
-      </div>
-      <div class="status-line" style="margin-top:12px"><span class="status-dot"></span><span id="data-date">Fuente: servicio público de precios de carburantes.</span></div>
+      <div class="status-line station-source-line"><span class="status-dot"></span><span id="data-date">Fuente: servicio público de precios de carburantes.</span></div>
     </div>
     <div class="map-layout" style="grid-template-columns:minmax(0,1.15fr) minmax(340px,.85fr)">
       <div><div id="stations-map" aria-label="Mapa de gasolineras"></div><p class="tiny muted" style="margin:10px 2px 0">Mapa © OpenStreetMap. Los precios proceden del servicio público y pueden cambiar después de la consulta.</p></div>
-      <aside class="card" style="max-height:610px;overflow:auto"><div style="display:flex;justify-content:space-between;align-items:end;gap:10px"><div><div class="kicker">Resultados</div><h2 style="font-size:1.4rem;margin-top:4px">Gasolineras</h2></div><strong id="station-count" class="muted">0</strong></div><div id="station-list" class="station-list"><p class="muted">Selecciona una provincia o marca un punto en el mapa.</p></div></aside>
+      <aside class="card station-results-card"><div style="display:flex;justify-content:space-between;align-items:end;gap:10px"><div><div class="kicker">Resultados</div><h2 style="font-size:1.4rem;margin-top:4px">Gasolineras</h2></div><strong id="station-count" class="muted">0</strong></div><div id="station-list" class="station-list station-results-scroll"><p class="muted">Selecciona una provincia o marca un punto en el mapa.</p></div></aside>
     </div>
   </div></section>
   <section class="section"><div class="container grid grid-3">
